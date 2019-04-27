@@ -6,6 +6,10 @@ function push {
   clojure -A:dev -m datomic.ion.dev '{:op :push}'
 }
 
+function commit {
+  git commit -a -m hey
+}
+
 cmd="$1"
 shift
 $cmd "$@"

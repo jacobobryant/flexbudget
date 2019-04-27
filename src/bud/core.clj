@@ -9,5 +9,5 @@
 
 
 (def landing (ionize (fn [_] {:status 200
-                              :headers "Content-Type" "text/html"
+                              :headers {"Content-Type" "text/html"}
                               :body (views/landing)})))

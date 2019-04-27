@@ -1,5 +1,6 @@
 (ns user
-  (:require [datomic.client.api :as d]))
+  (:require [datomic.client.api :as d]
+            [bud.core]))
 
 (def cfg {:server-type :ion
           :region "us-east-1" ;; e.g. us-east-1
