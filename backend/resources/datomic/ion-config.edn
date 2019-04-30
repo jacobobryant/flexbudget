@@ -1,0 +1,6 @@
+{:allow [bud.core/init]
+ :lambdas {:landing
+           {:fn bud.core/init
+            :integration :api-gateway/proxy
+            :description "init"}}
+ :app-name "bud"}

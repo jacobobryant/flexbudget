@@ -1,16 +1,23 @@
 (ns jobryant.re-com.core
-  (:refer-clojure :exclude [for]))
+  (:refer-clojure :exclude [for])
+  (:require [jobryant.views :refer [defview]]))
 
 (defmacro for [bindings body]
   `(clojure.core/for ~bindings
      (with-meta ~body {:key ~(first bindings)})))
 
-(defn gap []
-  [:div {:style {:width "10px"
-                 :height "10px"}}])
+(defn gap
+  ([size]
+   [:div {:style {:width size
+                  :height size}}])
+  ([]
+   (gap "10px")))
 
 (defn v-box [& children]
   (into
     [:div {:style {:display "flex"
                    :flex-direction "column"}}]
     (interpose (gap) (filter some? children))))
+
+(defview p [opts contents]
+  (into [:p.mx-auto opts] contents))

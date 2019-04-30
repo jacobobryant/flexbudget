@@ -1,0 +1,24 @@
+#!/bin/bash
+set -x
+set -e
+
+function repl {
+  clj -A:dev -e "(do (nrepl) (doto 'bud.client.static require in-ns))" -r
+}
+
+function fig {
+  clj -A:dev -m figwheel.main -b dev -r
+}
+
+function serve {
+  (sleep 0.5; firefox dev.impl.sh:8000) &
+  python -m http.server -d target
+}
+
+function push {
+  aws s3 sync --delete target/ s3://impl.sh
+}
+
+cmd="$1"
+shift
+$cmd "$@"

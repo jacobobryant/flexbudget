@@ -1,5 +1,5 @@
-(ns bud.views
-  (:require [bud.color :as color]))
+(ns bud.client.shared
+  (:require [bud.client.color :as color]))
 
 (defn navbar [{:keys [show-login? dark? show-logout?]}]
   [:nav.navbar.static-top
@@ -12,6 +12,6 @@
                                dark? (assoc :color "white"))}
      "FlexBudget"]
     (when show-login?
-      [:a.btn.btn-primary {:href "/login"} "Sign In"])
+      [:a.btn.btn-primary {:href "/login.html"} "Sign In"])
     (when show-logout?
       [:a.btn.btn-primary {:href "/logout"} "Sign Out"])]])

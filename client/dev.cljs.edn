@@ -1,0 +1,5 @@
+^{:open-url "http://dev.impl.sh:8000/app.html"}
+{:main bud.client.core
+ :output-to "target/cljs/main.js"
+ :output-dir "target/cljs/"
+ :asset-path "cljs"}

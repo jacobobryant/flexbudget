@@ -1,0 +1,16 @@
+{:paths ["src" "resources"]
+ :aliases
+ {:dev {:extra-paths ["env/dev" "target"]
+        :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+                     org.clojure/tools.namespace {:mvn/version "0.2.11"}
+                     nrepl {:mvn/version "0.6.0"}
+                     }}}
+ :deps
+ {jobryant {:local/root "../jobryant"}
+  shared {:local/root "../shared"}
+  org.clojure/clojure {:mvn/version "1.9.0"}
+  orchestra {:mvn/version "2019.02.06-1"}
+  me.raynes/fs {:mvn/version "1.4.6"}
+  reagent {:mvn/version "0.8.1"}
+  com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
+  cljs-http {:mvn/version "0.1.46"}}}

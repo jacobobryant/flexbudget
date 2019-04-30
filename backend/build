@@ -1,0 +1,15 @@
+#!/bin/bash
+set -x
+set -e
+
+function repl {
+  clj -A:dev -e "(do (nrepl) (go))" -r
+}
+
+function push {
+  clojure -A:dev -m datomic.ion.dev '{:op :push}'
+}
+
+cmd="$1"
+shift
+$cmd "$@"
