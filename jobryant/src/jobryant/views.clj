@@ -1,5 +1,4 @@
-(ns jobryant.views
-  (:require [ring.util.anti-forgery :refer [anti-forgery-field]]))
+(ns jobryant.views)
 
 (defn get-opts [opts contents]
   (if (map? opts)
@@ -10,11 +9,3 @@
   `(defn ~f [opts# & contents#]
      (let [[~opts ~contents] (get-opts opts# contents#)]
        ~@forms)))
-
-(defview form [opts contents]
-  [:form (merge {:method "post"} opts)
-   (anti-forgery-field)
-   contents])
-
-(defn post-button [action text]
-  (form action [:input {:type "submit" :value text}]))

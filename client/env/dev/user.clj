@@ -1,7 +1,8 @@
 (ns user
   (:require [clojure.tools.namespace.repl :as tn]
             [nrepl.server :refer [start-server]]
-            [orchestra.spec.test :as st]))
+            [orchestra.spec.test :as st]
+            [bud.client.static :as static]))
 
 (st/instrument)
 
@@ -21,3 +22,6 @@
 
 (defn nrepl []
   (start-server :port 7888))
+
+(defn gensite []
+  (static/gensite "target/dev"))

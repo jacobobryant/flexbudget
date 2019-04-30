@@ -1,0 +1,4 @@
+{:optimizations :advanced,
+ :infer-externs true,
+ :output-to "target/prod/cljs/main.js",
+ :output-dir "target/tmp"}

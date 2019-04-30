@@ -1,6 +1,5 @@
 (ns bud.client.static
-  (:require [jobryant.views :refer [defview form]]
-            [jobryant.hiccup.core :as hiccup]
+  (:require [jobryant.hiccup.core :as hiccup]
             [jobryant.re-com.core :as rc]
             [jobryant.util :as u]
             [bud.client.color :as color]
@@ -32,7 +31,8 @@
     [:script {:src "/js/form.js"}]))
 
 (def firebase
-  (list [:script {:src "https://www.gstatic.com/firebasejs/5.10.1/firebase.js"}]
+  (list [:script {:src "https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"}]
+        [:script {:src "https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"}]
         [:script {:src "/js/firebase-init.js"}]))
 
 (def firebase-ui
@@ -89,9 +89,9 @@
 (def routes {"/index.html" landing
              "/app.html" app})
 
-(defn gensite []
-  (sh "rsync" "-a" "--delete" "--exclude" "cljs" "assets/" "target")
+(defn gensite [root]
+  (sh "rsync" "-a" "--delete" "--exclude" "cljs" "assets/" root)
   (doseq [[path contents] routes]
-    (let [path (str "target" path)]
+    (let [path (str root path)]
       (make-parents path)
       (spit path contents))))

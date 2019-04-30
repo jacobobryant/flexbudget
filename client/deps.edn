@@ -1,6 +1,6 @@
 {:paths ["src" "resources"]
  :aliases
- {:dev {:extra-paths ["env/dev" "target"]
+ {:dev {:extra-paths ["env/dev"]
         :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
                      org.clojure/tools.namespace {:mvn/version "0.2.11"}
                      nrepl {:mvn/version "0.6.0"}

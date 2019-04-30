@@ -3,7 +3,7 @@ set -x
 set -e
 
 function repl {
-  clj -A:dev -e "(do (nrepl) (doto 'bud.client.static require in-ns))" -r
+  clj -A:dev -e "(do (nrepl) (gensite))" -r
 }
 
 function fig {
@@ -12,11 +12,13 @@ function fig {
 
 function serve {
   (sleep 0.5; firefox dev.impl.sh:8000) &
-  python -m http.server -d target
+  python -m http.server -d target/dev
 }
 
 function push {
-  aws s3 sync --delete target/ s3://impl.sh
+  clj -e "(do (doto 'bud.client.static require in-ns) (gensite \"target/prod\"))"
+  clj -m cljs.main -co prod.cljs.edn -c bud.client.core
+  aws s3 sync --delete target/prod/ s3://impl.sh
 }
 
 cmd="$1"
