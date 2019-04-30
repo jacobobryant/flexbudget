@@ -1,6 +1,5 @@
 (ns bud.core
-  (:require [bud.backend.views :as views]
-            [clojure.data.json :as json]
+  (:require [clojure.data.json :as json]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]

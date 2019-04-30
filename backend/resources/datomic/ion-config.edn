@@ -1,6 +1,6 @@
-{:allow [bud.core/init]
+{:allow [bud.backend.core/init]
  :lambdas {:landing
-           {:fn bud.core/init
+           {:fn bud.backend.core/init
             :integration :api-gateway/proxy
             :description "init"}}
  :app-name "bud"}

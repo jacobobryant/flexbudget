@@ -4,7 +4,7 @@
             [nrepl.server :refer [start-server]]
             [orchestra.spec.test :as st]
             [datomic.client.api :as d]
-            [bud.core]))
+            [bud.backend.core]))
 
 (st/instrument)
 

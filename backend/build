@@ -7,7 +7,7 @@ function repl {
 }
 
 function push {
-  clojure -A:dev -m datomic.ion.dev '{:op :push}'
+  clojure -A:dev -m datomic.ion.dev '{:op :push :uname "wip"}'
 }
 
 cmd="$1"
