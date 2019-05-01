@@ -4,27 +4,11 @@
             [nrepl.server :refer [start-server]]
             [orchestra.spec.test :as st]
             [datomic.client.api :as d]
-            [bud.backend.core]))
-
-(st/instrument)
-
-(def cfg {:server-type :ion
-          :region "us-east-1"
-          :system "bud"
-          :endpoint "http://entry.bud.us-east-1.datomic.net:8182/"
-          :proxy-port 8182})
-
-(defn get-client []
-  (d/client cfg))
-
-(defn get-conn [client]
-  (do
-    (d/create-database client {:db-name "dev"})
-    (d/connect client {:db-name "dev"})))
-
-(defstate client :start (get-client))
-
-(defstate conn :start (get-conn client))
+            [jobryant.util :as u]
+            [compute.datomic-client-memdb.core :as memdb]
+            [bud.backend.core :as core]
+            [bud.backend.config :as c]
+            [aleph.http :as aleph]))
 
 (comment
   (nrepl.server/start-server :port 7888)
@@ -36,13 +20,25 @@
 
 )
 
+(st/instrument)
+
+(defn start-aleph []
+  (with-redefs [c/db-name "dev"
+                c/client-fn memdb/client
+                c/client-cfg {}]
+    (aleph/start-server
+      core/handler'
+      {:port 8080})))
+
+(defstate server :start (start-aleph)
+                 :stop (.close server))
+
 (tn/set-refresh-dirs "src")
 
 (defn nrepl []
   (start-server :port 7888))
 
 (defn go []
-  ;(get-conn (get-client))
   (mount/start)
   :ready)
 
