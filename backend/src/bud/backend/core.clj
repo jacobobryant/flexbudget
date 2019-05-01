@@ -1,4 +1,4 @@
-(ns bud.core
+(ns bud.backend.core
   (:require [clojure.data.json :as json]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

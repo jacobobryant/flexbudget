@@ -7,7 +7,11 @@ function repl {
 }
 
 function push {
-  clojure -A:dev -m datomic.ion.dev '{:op :push :uname "wip"}'
+  clojure -A:dev -m datomic.ion.dev "{:op :push :uname \"$(uuidgen)\"}"
+}
+
+function proxy {
+  datomic-socks-proxy bud
 }
 
 cmd="$1"
