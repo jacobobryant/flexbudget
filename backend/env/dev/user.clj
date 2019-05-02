@@ -3,11 +3,7 @@
             [mount.core :as mount :refer [defstate]]
             [nrepl.server :refer [start-server]]
             [orchestra.spec.test :as st]
-            [datomic.client.api :as d]
-            [jobryant.util :as u]
-            [compute.datomic-client-memdb.core :as memdb]
             [bud.backend.core :as core]
-            [bud.backend.config :as c]
             [aleph.http :as aleph]))
 
 (comment
@@ -23,12 +19,9 @@
 (st/instrument)
 
 (defn start-aleph []
-  (with-redefs [c/db-name "dev"
-                c/client-fn memdb/client
-                c/client-cfg {}]
-    (aleph/start-server
-      core/handler'
-      {:port 8080})))
+  (aleph/start-server
+    core/handler'
+    {:port 8080}))
 
 (defstate server :start (start-aleph)
                  :stop (.close server))
@@ -40,7 +33,7 @@
 
 (defn go []
   (mount/start)
-  :ready)
+  (println :ready))
 
 (defmacro reset []
   `(do (mount/stop)

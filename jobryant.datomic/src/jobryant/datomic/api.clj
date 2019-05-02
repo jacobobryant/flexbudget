@@ -59,9 +59,8 @@
   (d/create-database db-uri)
   (let [conn (d/connect db-uri)
         tmp-storage (fs/temp-file "jobryant-datomic-api")
-        txes (remove empty? [(some-> schema du/datomic-schema)
+        txes (remove empty? [schema
                              (some-> tx-fn-ns du/ns-tx-fns)
-                             [(du/tx-fn 'jobryant.txauth/authorize)]
                              data])]
     (doseq [tx txes]
       @(d/transact conn (conj tx {:db/id "datomic.tx"

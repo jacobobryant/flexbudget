@@ -1,7 +1,6 @@
 (ns jobryant.datascript.core
   (:require [reagent.core :as r]
             [datascript.core :as d]
-            [jobryant.datomic.util :as du]
             [jobryant.util :as u]
             [cljs-time.instant]
             [cljs-time.coerce :refer [from-date]]
@@ -38,7 +37,7 @@
 (defn transact! [persist-fn conn tx & queries]
   (let [tx-result (d/transact! conn tx)]
     (apply invalidate! queries)
-    (go (let [tx (du/translate-eids (:schema @conn) (::eids @conn) tx)
+    (go (let [tx (u/translate-eids (:schema @conn) (::eids @conn) tx)
               eids (<! (persist-fn tx))
               tempids (reverse-tempids tx-result eids)]
           (swap! conn update ::eids merge tempids)))
@@ -46,7 +45,7 @@
 
 (defn init-from-datomic! [conn datoms]
   (let [tx (->> datoms
-                (du/tempify-datoms (:schema @conn))
+                (u/tempify-datoms (:schema @conn))
                 (postwalk #(u/pred-> % u/instant? from-date))
                 (map concat (repeat [:db/add])))
         eids (reverse-tempids (d/transact! conn tx) u/parse-int)]

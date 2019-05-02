@@ -1,9 +1,8 @@
-(ns jobryant.datomic.util
+(ns jobryant.util.datomic
   (:require [clojure.string :as str]
-            [clojure.pprint :refer [pprint]]
             [clojure.spec.alpha :as s]
-            [jobryant.util :as u]
-    #?(:clj [datomic.api :as d])))
+            [jobryant.util.core :as u]
+            [clojure.set :refer [difference]]))
 
 (defn expand-flags [xs]
   (->> xs
@@ -93,29 +92,25 @@
 
             :else xs))))))
 
-#?(:clj (do
+(defn- kv-valid? [k v]
+  (or (map? v) (s/valid? k v)))
 
-(defn exists?
-  ([db eid]
-   (boolean (d/q '[:find ?e . :in $ ?e :where [?e]] db eid)))
-  ([db attr value]
-   (boolean (d/q '[:find ?e . :in $ ?a ?v :where [?e ?a ?v]] db attr value))))
+(defn wrap-vec
+  "Only for use with Datomic ref values"
+  [x]
+  (u/pred-> x (comp not set?) vector))
 
-(defn ref? [db attr]
-  (= :db.type/ref (:value-type (d/attribute db attr))))
-
-(defn tx-fn [fn-sym]
-  (let [fn-var (resolve fn-sym)
-        params (-> fn-var meta :arglists first)]
-    {:db/ident (keyword fn-sym)
-     :db/fn (d/function
-              {:lang "clojure"
-               :params params
-               :requires [[(-> fn-sym namespace symbol)]]
-               :code `(~fn-sym ~@params)})}))
-
-(defn ns-tx-fns [ns-sym]
-  (map #(tx-fn (symbol (str ns-sym) (str (first %))))
-       (ns-publics ns-sym)))
-
-))
+(defn ent-spec
+  ([req opt]
+   (let [req (set req)
+         all (into req opt)]
+     (fn [ent]
+       (let [ks (-> ent keys set (disj :db/id))
+             registry (s/registry)]
+         (and (empty? (difference req ks))
+              (empty? (difference ks all))
+              (every? #(or (not (contains? registry %))
+                           (every? (partial kv-valid? %) (wrap-vec (get ent %))))
+                      ks))))))
+   ([req]
+    (ent-spec req nil)))

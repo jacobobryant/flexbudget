@@ -3,6 +3,7 @@ set -x
 set -e
 
 function repl {
+  export GOOGLE_APPLICATION_CREDENTIALS=~/dev/bud/backend/firebase-key.json
   clj -A:dev -e "(do (nrepl) (go))" -r
 }
 

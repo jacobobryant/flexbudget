@@ -83,8 +83,7 @@
       [:script {:src "/cljs/main.js" :type "text/javascript"}])
     [:body {:style {:background color/background}}
      [:div#app {:style {:height "inherit"}}]
-     [:script "window.prstr  = function (obj) { return cljs.core.pr_str(obj) };
-               window.onload = function () { bud.client.core._main(); }"]]))
+     [:script "window.onload = function () { bud.client.core._main(); }"]]))
 
 (def routes {"/index.html" landing
              "/app.html" app})

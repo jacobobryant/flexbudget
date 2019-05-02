@@ -3,8 +3,9 @@
             [jobryant.util :as u]))
 
 (def schema
-  {:user/email [:db.type/string :db.unique/identity]
-   :user/password [:db.type/string]
+  {:user/uid [:db.type/string :db.unique/identity]
+   :user/email [:db.type/string :db.unique/identity]
+   :user/emailVerified [:db.type/boolean]
 
    :auth/owner [:db.type/ref]
 
@@ -22,11 +23,12 @@
    :goal/date [:db.type/instant]
    :goal/allowance [:db.type/long]})
 
-(s/def ::password #(and (string? %) (<= (count %) 100)))
-(s/def ::email ::password)
-(s/def ::goal (u/only-keys [:auth/owner :goal/allowance :goal/date :misc/amount]))
-(s/def ::delta (u/only-keys [:auth/owner :delta/frequency :misc/amount :misc/description]
+(def datomic-schema (u/datomic-schema schema))
+(def ds-schema (u/datascript-schema schema))
+
+(s/def ::goal (u/ent-spec [:auth/owner :goal/allowance :goal/date :misc/amount]))
+(s/def ::delta (u/ent-spec [:auth/owner :delta/frequency :misc/amount :misc/description]
                             [:delta/basis]))
-(s/def :entry/asset (u/only-keys [:misc/amount :misc/description]))
-(s/def ::entry.draft (u/only-keys [:auth/owner :entry/draft] [:entry/asset]))
-(s/def ::entry (u/only-keys [:auth/owner :entry/date] [:entry/asset]))
+(s/def :entry/asset (u/ent-spec [:misc/amount :misc/description]))
+(s/def ::entry.draft (u/ent-spec [:auth/owner :entry/draft] [:entry/asset]))
+(s/def ::entry (u/ent-spec [:auth/owner :entry/date] [:entry/asset]))

@@ -11,7 +11,9 @@
                      mount {:mvn/version "0.1.15"}
                      aleph {:mvn/version "0.4.6"}
                      org.clojure/tools.namespace {:mvn/version "0.2.11"}
-                     }}}
+                     jobryant.datomic {:local/root "../jobryant.datomic"}
+                     }}
+  :prod {:extra-paths ["env/prod"]}}
  :deps
  {jobryant.util {:local/root "../jobryant.util"}
   shared {:local/root "../shared"}
@@ -20,4 +22,8 @@
   org.clojure/clojure {:mvn/version "1.9.0"}
   orchestra {:mvn/version "2019.02.06-1"}
   compojure {:mvn/version "1.6.1"}
+  ring/ring-defaults {:mvn/version "0.3.2"}
+  ring-cors {:mvn/version "0.1.13"}
+  ring-middleware-format {:mvn/version "0.7.4"}
+  com.google.firebase/firebase-admin {:mvn/version "6.8.1"}
   }}

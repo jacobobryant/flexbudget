@@ -4,26 +4,28 @@
             [jobryant.util :as u]
             [clojure.pprint :refer [pprint]]
             [jobryant.datascript.core :as d]
-            [jobryant.datomic.util :as du]
             [cljs-time.core :refer [before? today]]
             [bud.client.calc :as calc]
             [bud.shared.schema :refer [schema]])
   (:require-macros [jobryant.datascript.core :refer [defq]]))
 
-(defonce conn (d/create-conn (du/datascript-schema schema)))
-(defonce email (r/atom nil))
+(def user #(.. js/firebase auth -currentUser))
+(def token #(.getIdToken (user)))
+(def uid #(.-uid (user)))
+(def email #(.-email (user)))
+
+(defonce conn (d/create-conn (u/datascript-schema schema)))
 (defonce loading? (r/atom true))
-(defonce anti-forgery-token (r/atom nil))
 
 (defq entries
-  (->> (d/db conn)
+  (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               (or [?e :entry/draft]
                   [?e :entry/data])])
        (sort-by :db/id)))
 
 (defq deltas
-  (->> (d/db conn)
+  (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               [?e :delta/frequency]])
        (sort-by :db/id)))
