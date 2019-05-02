@@ -57,4 +57,8 @@
           (init-goal!))
         (reset! db/loading? false))))
 
+(defn sign-out! []
+  (.then (.. js/firebase auth signOut)
+         #(set! (.. js/window -location -href) "/")))
+
 (defonce _ (init!))

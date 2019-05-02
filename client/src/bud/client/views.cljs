@@ -27,10 +27,10 @@
              :align :center}
    [header-title "FlexBudget" :level1]
    [rc/grow]
-   [rc/hyperlink-href
+   [rc/hyperlink
     :style {:font-size "1.2em" :color "white"}
     :label "Log out"
-    :href "/logout"]])
+    :on-click event/sign-out!]])
 
 (def cell-style {:style {:padding-right 15}})
 

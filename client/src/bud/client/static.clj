@@ -35,6 +35,14 @@
         [:script {:src "https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"}]
         [:script {:src "/js/firebase-init.js"}]))
 
+(def ensure-logged-in
+  [:script "firebase.auth().onAuthStateChanged(u => { if (!u) window.location.href = '/'; });"])
+  ;[:script "if (firebase.auth().currentUser == null) window.location.href = \"/\";"])
+
+(def ensure-logged-out
+  [:script "firebase.auth().onAuthStateChanged(u => { if (u) window.location.href = '/app.html'; });"])
+  ;[:script "if (firebase.auth().currentUser != null) window.location.href = \"/app.html\";"])
+
 (def firebase-ui
   (list [:script {:src "https://cdn.firebase.com/libs/firebaseui/3.6.0/firebaseui.js"}]
         [:link {:type "text/css" :rel "stylesheet"
@@ -44,10 +52,11 @@
 (def re-com
   (list [:link {:rel "stylesheet" :href "/css/material-design-iconic-font.min.css"}]
         [:link {:rel "stylesheet" :href "/css/re-com.css"}]
+        [:link {:rel "stylesheet" :href "/css/main.css"}]
 
-        [:link {:href "https://fonts.googleapis.com/css?family Roboto:300,400,500,700,400italic"
+        [:link {:href "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic"
                 :rel "stylesheet" :type "text/css"}]
-        [:link {:href "https://fonts.googleapis.com/css?family Roboto+Condensed:400,300"
+        [:link {:href "https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300"
                 :rel "stylesheet" :type "text/css"}]))
 
 (defn head [& items]
@@ -60,9 +69,9 @@
   (html
     (head
       [:title "FlexBudget"]
-      bootstrap-4 firebase firebase-ui)
+      firebase ensure-logged-out bootstrap-4 firebase-ui)
     [:body
-      (navbar {:dark? true})
+      (navbar)
       [:div.container
        [:div.row
         [:div.col-lg-6
@@ -79,7 +88,7 @@
   (html
     (head
       [:title "FlexBudget"]
-      bootstrap-3 firebase re-com
+      firebase ensure-logged-in bootstrap-3 re-com
       [:script {:src "/cljs/main.js" :type "text/javascript"}])
     [:body {:style {:background color/background}}
      [:div#app {:style {:height "inherit"}}]
