@@ -1,2 +1,6 @@
 firebase-key.json
 storage.edn
+.cpcache
+.tags
+target
+frontend
