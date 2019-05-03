@@ -53,6 +53,19 @@
 (defmacro for-some? [& forms]
   `(some boolean (for ~@forms)))
 
+(defn loadf [sym]
+  (let [f (delay (require (symbol (namespace sym)))
+                 (if-let [f (resolve sym)]
+                   @f
+                   (throw (ex-info sym " is not on the classpath."))))]
+    (fn [& args]
+      (apply @f args))))
+
+(defmacro load-fns [& forms]
+  (assert (even? (count forms)))
+  `(do ~@(for [[sym fn-sym] (partition 2 forms)]
+           `(def ~sym (#'loadf (quote ~fn-sym))))))
+
 ))
 
 (defn pred-> [x f g]

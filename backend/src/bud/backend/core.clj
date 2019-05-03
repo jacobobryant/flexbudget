@@ -1,11 +1,7 @@
 (ns bud.backend.core
-  (:require [clojure.data.json :as json]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [clojure.pprint :as pp]
-            [jobryant.util :as u]
+  (:require [jobryant.util :as u]
             [jobryant.txauth :as txauth]
-            [bud.backend.config :as c]
+            [bud.backend.env :refer [conn transact]]
             [bud.backend.query :as q]
             [bud.backend.tx]
             [compojure.core :refer [defroutes GET POST]]
@@ -37,14 +33,11 @@
          :headers {"Content-Type" "text/plain"}
          :body "Invalid authentication token."}))))
 
-(defn db []
-  (d/db (c/conn)))
-
 (defn init [{:keys [claims uid] :as req}]
   (let [tx [{:user/uid uid
              :user/email (claims "email")
              :user/emailVerified (claims "email_verified")}]
-        {:keys [db-after] :as result} (c/transact (c/conn) {:tx-data tx})]
+        {:keys [db-after] :as result} (transact conn {:tx-data tx})]
   {:headers {"Content-Type" "application/edn"}
    :body (pr-str (q/datoms-for db-after uid))}))
 
@@ -52,8 +45,8 @@
   (GET "/init" req (init req))
   (POST "/tx" req (txauth/handler
                     (assoc req
-                           :conn (c/conn)
-                           :transact-fn c/transact
+                           :conn conn
+                           :transact-fn transact
                            :tx-fn :bud.backend.tx/authorize))))
 
 (defn wrap-capture [handler]

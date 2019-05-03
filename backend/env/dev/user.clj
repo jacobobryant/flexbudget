@@ -4,6 +4,7 @@
             [nrepl.server :refer [start-server]]
             [orchestra.spec.test :as st]
             [bud.backend.core :as core]
+            [compute.datomic-client-memdb.core]
             [aleph.http :as aleph]))
 
 (comment
@@ -11,7 +12,6 @@
 
   ; for un-botching the repl
   (require '[clojure.tools.namespace.repl :as tn])
-  (tn/set-refresh-dirs "src")
   (tn/refresh)
 
 )
@@ -25,8 +25,6 @@
 
 (defstate server :start (start-aleph)
                  :stop (.close server))
-
-(tn/set-refresh-dirs "src")
 
 (defn nrepl []
   (start-server :port 7888))
