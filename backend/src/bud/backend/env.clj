@@ -24,7 +24,7 @@
 (def config
   (merge
     {:env :prod
-     :db-name "prod"
+     :db-name "dev"
      :client-cfg {:server-type :ion
                   :region "us-east-1"
                   :system "bud"

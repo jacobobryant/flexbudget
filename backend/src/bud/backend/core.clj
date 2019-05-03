@@ -47,22 +47,28 @@
                     (assoc req
                            :conn conn
                            :transact-fn transact
-                           :tx-fn :bud.backend.tx/authorize))))
+                           :tx-fn 'bud.backend.tx/authorize))))
 
 (defn wrap-capture [handler]
   (fn [req]
-    (println "capturin'" (:uri req))
-    (u/capture req)
-    (handler req)))
+    (let [result (handler req)]
+      (when (not= 200 (:status result))
+        (u/capture req)
+        (u/pprint req)
+        (println)
+        (u/pprint result)
+        (println)
+        (println (:uri req) "failed"))
+      result)))
 
 (def handler' (-> routes
                   wrap-uid
+                  wrap-capture
                   wrap-clojure-params
                   (wrap-defaults api-defaults)
                   (wrap-cors
                     :access-control-allow-origin [#"http://dev.impl.sh:8000" #"https://impl.sh"]
                     :access-control-allow-methods [:get :post]
-                    :access-control-allow-headers ["Authorization" "Content-Type"])
-                  wrap-capture))
+                    :access-control-allow-headers ["Authorization" "Content-Type"])))
 
 (def handler (ionize handler'))

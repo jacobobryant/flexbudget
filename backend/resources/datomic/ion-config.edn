@@ -1,4 +1,5 @@
-{:allow [bud.backend.core/init]
+{:allow [bud.backend.core/handler
+         bud.backend.tx/authorize]
  :lambdas {:init
            {:fn bud.backend.core/handler
             :integration :api-gateway/proxy

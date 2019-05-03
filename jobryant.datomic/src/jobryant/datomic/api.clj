@@ -54,14 +54,12 @@
       (update :eids merge (:tempids result))
       (assoc :db (:db-after result))))
 
-(defn connect [db-uri {:keys [schema tx-fn-ns data]}]
+(defn connect [db-uri {:keys [schema data]}]
   (d/delete-database db-uri)
   (d/create-database db-uri)
   (let [conn (d/connect db-uri)
         tmp-storage (fs/temp-file "jobryant-datomic-api")
-        txes (remove empty? [schema
-                             (some-> tx-fn-ns du/ns-tx-fns)
-                             data])]
+        txes (remove empty? [schema data])]
     (doseq [tx txes]
       @(d/transact conn (conj tx {:db/id "datomic.tx"
                                   :db/txInstant #inst "2000-01-01T00:00:00.000-00:00"})))

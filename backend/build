@@ -9,7 +9,8 @@ function repl {
 }
 
 function push {
-  clojure -A:dev -m datomic.ion.dev "{:op :push :uname \"$(uuidgen)\"}"
+  #clojure -A:dev -m datomic.ion.dev "{:op :push :uname \"$(uuidgen)\"}"
+  clojure -A:dev -m datomic.ion.dev "{:op :push}"
 }
 
 function proxy {

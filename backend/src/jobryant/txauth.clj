@@ -52,12 +52,12 @@
                            :after after})))))
     tx))
 
-(defn handler [{:keys [tx-fn-blacklist transact-fn conn tx-fn params uid]
-                :or {tx-fn-blacklist #{}}
+(defn handler [{:keys [allowed transact-fn conn tx-fn params uid]
+                :or {allowed #{}}
                 :as req}]
   (u/capture req)
   (let [tx (:tx params)]
-    (if-some [bad-fn (some #(or (symbol? %) (contains? tx-fn-blacklist %))
+    (if-some [bad-fn (some #(and (symbol? %) (not (contains? allowed %)))
                            (map first tx))]
       {:status 403
        :body (str "tx fn not allowed: " bad-fn)}
