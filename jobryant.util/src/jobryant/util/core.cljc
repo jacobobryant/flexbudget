@@ -54,11 +54,11 @@
   `(some boolean (for ~@forms)))
 
 (defn loadf [sym]
-  (let [f (delay (require (symbol (namespace sym)))
-                 (if-let [f (resolve sym)]
-                   @f
-                   (throw (ex-info sym " is not on the classpath."))))]
-    (fn [& args]
+  (fn [& args]
+    (require (symbol (namespace sym)))
+    (let [f (if-let [f (resolve sym)]
+              f
+              (throw (ex-info sym " is not on the classpath.")))]
       (apply @f args))))
 
 (defmacro load-fns [& forms]

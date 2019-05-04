@@ -1,8 +1,7 @@
 {:paths ["src" "resources"]
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
  :aliases
- {:dev {:extra-paths ["env/dev"]
-        :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
+ {:dev {:extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
                      com.datomic/ion-dev {:mvn/version "0.9.186"}
                      nrepl {:mvn/version "0.6.0"}
                      compute/datomic-client-memdb
@@ -10,9 +9,8 @@
                       :sha "fd880e70b45a0837f1604aa1230047cb74ec536e"}
                      aleph {:mvn/version "0.4.6"}
                      org.clojure/tools.namespace {:mvn/version "0.2.11"}
-                     jobryant.datomic {:local/root "../jobryant.datomic"}
-                     }}
-  :prod {:extra-paths ["env/prod"]}}
+                     jobryant.datomic {:local/root "../jobryant.datomic"}}}
+  :local {:extra-paths ["env/dev"]}}
  :deps
  {jobryant.util {:local/root "../jobryant.util"}
   mount {:mvn/version "0.1.15"}
@@ -26,4 +24,15 @@
   ring-cors {:mvn/version "0.1.13"}
   ring-middleware-format {:mvn/version "0.7.4"}
   com.google.firebase/firebase-admin {:mvn/version "6.8.1"}
+
+  com.cognitect/transit-java #:mvn{:version "0.8.311"},
+  commons-codec/commons-codec #:mvn{:version "1.10"},
+  com.fasterxml.jackson.core/jackson-core #:mvn{:version "2.9.5"},
+  com.google.guava/guava #:mvn{:version "18.0"},
+  org.msgpack/msgpack #:mvn{:version "0.6.10"},
+  com.cognitect/transit-clj #:mvn{:version "0.8.285"},
+  org.clojure/tools.reader #:mvn{:version "1.0.0-beta4"},
+  org.slf4j/slf4j-api #:mvn{:version "1.7.14"},
+  org.clojure/core.memoize #:mvn{:version "0.5.9"},
+  org.clojure/core.cache #:mvn{:version "0.6.5"}
   }}

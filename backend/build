@@ -5,7 +5,7 @@ set -e
 function repl {
   export GOOGLE_APPLICATION_CREDENTIALS=~/dev/bud/backend/firebase-key.json
   export DATOMIC_ENV_MAP="$(cat env.edn)"
-  clj -A:dev -e "(do (nrepl) (go))" -r
+  clj -A:dev -A:local -e "(do (nrepl) (go))" -r
 }
 
 function push {
