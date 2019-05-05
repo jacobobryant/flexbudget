@@ -10,9 +10,20 @@
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.format-params :refer [wrap-clojure-params]]
             [ring.middleware.cors :refer [wrap-cors]])
-  (:import com.google.firebase.auth.FirebaseAuth))
+  (:import com.google.firebase.auth.FirebaseAuth
+           [com.google.firebase FirebaseApp FirebaseOptions$Builder]
+           com.google.auth.oauth2.GoogleCredentials))
+
+(defn init-firebase! []
+  (let [options (-> (new FirebaseOptions$Builder)
+                    (.setCredentials (GoogleCredentials/getApplicationDefault))
+                    (.setDatabaseUrl "https://budget-6fc5c.firebaseio.com")
+                    .build)]
+    (FirebaseApp/initializeApp options)))
 
 (defn verify-token [token]
+  (when (= 0 (count (FirebaseApp/getApps)))
+    (init-firebase!))
   (try
     (-> (FirebaseAuth/getInstance)
         (.verifyIdToken token)

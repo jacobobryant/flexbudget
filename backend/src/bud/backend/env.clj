@@ -3,9 +3,7 @@
             [bud.shared.schema :refer [datomic-schema]]
             [datomic.ion :refer [get-env]]
             [jobryant.util :as u]
-            [mount.core :refer [defstate start]])
-  (:import [com.google.firebase FirebaseApp FirebaseOptions$Builder]
-           com.google.auth.oauth2.GoogleCredentials))
+            [mount.core :refer [defstate start]]))
 
 (u/load-fns
   jobryant-connect jobryant.datomic.api/connect
@@ -13,13 +11,6 @@
   jobryant-storage-path! jobryant.datomic.api/storage-path!
   memdb-client compute.datomic-client-memdb.core/client
   memdb-localdb compute.datomic-client-memdb.core/->LocalDb)
-
-(when (= 0 (count (FirebaseApp/getApps)))
-  (let [options (-> (new FirebaseOptions$Builder)
-                    (.setCredentials (GoogleCredentials/getApplicationDefault))
-                    (.setDatabaseUrl "https://budget-6fc5c.firebaseio.com")
-                    .build)]
-    (FirebaseApp/initializeApp options)))
 
 (def config
   (merge
