@@ -15,17 +15,22 @@
    (not-empty (d/q '[:find ?e :in $ ?a ?v :where [?e ?a ?v]] db attr value))))
 
 (defn ent-valid? [db spec ent]
+  (when (= spec :bud.shared.schema/goal)
+    (def db' db)
+    (u/capture spec ent))
   (and (s/valid? spec ent)
        (u/for-every? [[k vs] ent
                       v (u/wrap-vec vs)
-                      :when (map? v)]
-         (let [ent (if (= 1 (count (keys v)))
+                      :when (and (map? v)
+                                 (contains? (s/registry) k))]
+         (let [ent (if (empty? (dissoc v :db/id :db/ident))
                      (d/pull db '[*] (:db/id v))
                      v)]
            (s/valid? k ent)))))
 
-(defn authorize [authorizers db uid tx]
-  (let [{:keys [tx-data db-before db-after] :as result} (d/with db tx)]
+(defn authorize [authorizers with-fn db uid tx]
+  (u/capture authorizers with-fn db uid tx)
+  (let [{:keys [tx-data db-before db-after] :as result} (with-fn db {:tx-data tx})]
     (doseq [[e datoms] (group-by :e (rest tx-data))]
       (let [[before after :as ents]
             (map #(when (exists? % e) (d/pull % '[*] e)) [db-before db-after])
@@ -37,6 +42,8 @@
                                    (map vector specs ents [db-before db-after])]
                       (and (= (some? spec) (some? ent))
                            (or (nil? spec) (ent-valid? db spec ent))))]
+                (when matches-specs?
+                  (println "matches " specs))
                 (and matches-specs? (authorize-fn
                                       {:uid uid
                                        :db-before db-before
@@ -52,9 +59,8 @@
                            :after after})))))
     tx))
 
-(defn handler [{:keys [allowed transact-fn conn tx-fn params uid]
-                :or {allowed #{}}
-                :as req}]
+(defn handler [{:keys [allowed transact-fn conn auth-fn params uid]
+                :or {allowed #{}} :as req}]
   (u/capture req)
   (let [tx (:tx params)]
     (if-some [bad-fn (some #(and (symbol? %) (not (contains? allowed %)))
@@ -63,8 +69,13 @@
        :body (str "tx fn not allowed: " bad-fn)}
       (try
         {:headers {"Content-type" "application/edn"}
-         :body (pr-str (:tempids (transact-fn conn {:tx-data [[tx-fn uid tx]]})))}
+         :body (->> (transact-fn conn {:tx-data [[auth-fn uid tx]]})
+                    :tempids
+                    (map (fn [[k v]] [k (tagged-literal 'eid (str v))]))
+                    (into {})
+                    pr-str)}
         (catch Exception e
           (do
             (u/pprint e)
-            {:status 403}))))))
+            {:status 403
+             :body "tx not allowed"}))))))

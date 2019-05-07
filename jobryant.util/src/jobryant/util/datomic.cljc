@@ -32,7 +32,7 @@
        (remove (comp empty? second))
        (into {})))
 
-(defn tempify-datoms [ds-schema datoms]
+(defn stringify-eids [ds-schema datoms]
   (for [[e a v] datoms]
     [(str e) a (if (= :db.type/ref (get-in ds-schema [a :db/valueType]))
                  (str v)
@@ -114,3 +114,10 @@
                       ks))))))
    ([req]
     (ent-spec req nil)))
+
+(defn eval-txes [db tx]
+  (apply concat
+         (for [[op & args :as form] tx]
+           (if (symbol? op)
+             (eval-txes db (apply (u/loadf op) db args))
+             [form]))))

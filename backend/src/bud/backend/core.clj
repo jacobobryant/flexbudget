@@ -1,7 +1,7 @@
 (ns bud.backend.core
   (:require [jobryant.util :as u]
             [jobryant.txauth :as txauth]
-            [bud.backend.env :refer [conn transact]]
+            [bud.backend.env :refer [conn transact config]]
             [bud.backend.query :as q]
             [bud.backend.tx]
             [compojure.core :refer [defroutes GET POST]]
@@ -48,21 +48,27 @@
   (let [tx [{:user/uid uid
              :user/email (claims "email")
              :user/emailVerified (claims "email_verified")}]
-        {:keys [db-after] :as result} (transact conn {:tx-data tx})]
-  {:headers {"Content-Type" "application/edn"}
-   :body (pr-str (q/datoms-for db-after uid))}))
+        {:keys [db-after] :as result} (transact conn {:tx-data tx})
+        datoms (pr-str (sort (q/datoms-for db-after uid)))]
+    {:headers {"Content-Type" "application/edn"}
+     :body datoms}))
 
 (defroutes routes
   (GET "/init" req (init req))
   (POST "/tx" req (txauth/handler
-                    (assoc req
-                           :conn conn
-                           :transact-fn transact
-                           :tx-fn 'bud.backend.tx/authorize))))
+                    (merge req
+                           (select-keys config [:local-tx-fns?])
+                           {:conn conn
+                            :transact-fn transact
+                            :auth-fn 'bud.backend.tx/authorize}))))
 
 (defn wrap-capture [handler]
   (fn [req]
-    (let [result (handler req)]
+    (let [result (try (handler req)
+                      (catch Exception e
+                        (u/pprint e)
+                        (println)
+                        {:status 500}))]
       (when (not= 200 (:status result))
         (u/capture req)
         (u/pprint req)
@@ -74,12 +80,12 @@
 
 (def handler' (-> routes
                   wrap-uid
-                  wrap-capture
                   wrap-clojure-params
                   (wrap-defaults api-defaults)
                   (wrap-cors
                     :access-control-allow-origin [#"http://dev.impl.sh:8000" #"https://impl.sh"]
                     :access-control-allow-methods [:get :post]
-                    :access-control-allow-headers ["Authorization" "Content-Type"])))
+                    :access-control-allow-headers ["Authorization" "Content-Type"])
+                  wrap-capture))
 
 (def handler (ionize handler'))

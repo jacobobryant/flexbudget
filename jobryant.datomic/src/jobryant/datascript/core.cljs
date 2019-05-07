@@ -45,9 +45,8 @@
 
 (defn init-from-datomic! [conn datoms]
   (let [tx (->> datoms
-                (u/tempify-datoms (:schema @conn))
                 (postwalk #(u/pred-> % u/instant? from-date))
                 (map concat (repeat [:db/add])))
-        eids (reverse-tempids (d/transact! conn tx) u/parse-int)]
+        eids (reverse-tempids (d/transact! conn tx) #(tagged-literal 'eid %))]
     (swap! conn assoc ::eids eids))
   (invalidate!))

@@ -1,5 +1,6 @@
 {:allow [bud.backend.core/handler
-         bud.backend.tx/authorize]
+         bud.backend.tx/authorize
+         bud.backend.tx/tx-test]
  :lambdas {:init
            {:fn bud.backend.core/handler
             :integration :api-gateway/proxy

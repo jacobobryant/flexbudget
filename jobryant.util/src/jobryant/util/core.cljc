@@ -163,7 +163,7 @@
   (#?(:clj int :cljs char->int) c))
 
 (defn parse-int [s]
-  (#?(:clj Integer/parseInt :cljs js/parseInt) s))
+  (#?(:clj Long/parseLong :cljs js/parseInt) s))
 
 ; Do this with algo.generic
 (defn cop [op & cs]

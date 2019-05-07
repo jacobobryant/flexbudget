@@ -14,7 +14,7 @@
                 datomic-schema
                 ent-spec
                 expand-flags
-                tempify-datoms
+                stringify-eids
                 translate-eids
                 wrap-vec)
 
