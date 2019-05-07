@@ -6,7 +6,3 @@
 
 (defn authorize [db uid tx]
   (txauth/authorize authorizers with db uid tx))
-
-(defn tx-test [db]
-  (d/with db {:tx-data [{:db/ident :test/c}]})
-  [])
