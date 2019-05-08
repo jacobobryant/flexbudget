@@ -16,6 +16,10 @@ function proxy {
   datomic-socks-proxy bud
 }
 
+function deploy {
+  ./deploy
+}
+
 cmd="$1"
 shift
 $cmd "$@"

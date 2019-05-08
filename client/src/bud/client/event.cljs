@@ -49,7 +49,6 @@
 
 (defn init! []
   (go (let [{datoms :body :as response} (request http/get "/init")]
-        (u/pprint response)
         (d/init-from-datomic! conn datoms)
         (when (not (some? @db/entry))
           (draft-entry!))

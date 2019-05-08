@@ -1,0 +1,15 @@
+#!/usr/bin/planck
+(ns deploy.core
+  (:require [cljs.reader :refer [read-string]]
+            [planck.shell :as shell]))
+
+(defn sh [& args]
+  (let [result (apply shell/sh args)]
+    (if (= 0 (:exit result))
+      (:out result)
+      (throw (ex-info (:err result))))))
+
+(let [push-out (sh "./build" "push")
+      deploy-cmd (get-in (read-string (str "[" push-out "]")) [1 :deploy-command])
+      deploy-out (sh "bash" "-c" deploy-cmd)]
+  (print (:status-command (read-string deploy-out))))
