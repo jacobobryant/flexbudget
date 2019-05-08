@@ -30,7 +30,7 @@
   (start-server :port 7888))
 
 (defn go []
-  (mount/start)
+  ;(mount/start)
   (println :ready))
 
 (defmacro reset []

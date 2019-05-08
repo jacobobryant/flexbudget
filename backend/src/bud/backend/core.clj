@@ -11,7 +11,8 @@
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.format-params :refer [wrap-clojure-params]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [clojure.java.io :refer [input-stream]])
+            [clojure.java.io :refer [input-stream]]
+            [mount.core :as mount])
   (:import com.google.firebase.auth.FirebaseAuth
            [com.google.firebase FirebaseApp FirebaseOptions$Builder]
            com.google.auth.oauth2.GoogleCredentials))
@@ -71,7 +72,12 @@
 
 (defn wrap-capture [handler]
   (fn [req]
-    (log/event {:msg "got request" :uri (:uri req)})
+    (log/event {:msg "got request"
+                :uri (:uri req)
+                :conn-type (type conn)
+                :should-start (contains? #{mount.core.NotStartedState mount.core.DerefableState} (type conn))})
+    (when (contains? #{mount.core.NotStartedState mount.core.DerefableState} (type conn))
+      (log/event {:msg "Started mount" :result (mount/start)}))
     (let [result (try (handler req)
                       (catch Exception e
                         (log/alert {:msg "Unhandled exception in handler" :ex e})

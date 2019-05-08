@@ -40,8 +40,6 @@
         (d/transact conn {:tx-data datomic-schema})
         conn))))
 
-(when (not dev?) (start))
-
 (def transact (if (:local-tx-fns? config)
                 (let [lock (Object.)]
                   (fn [conn arg-map]
