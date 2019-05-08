@@ -1,22 +1,29 @@
 (ns bud.backend.core
   (:require [jobryant.util :as u]
             [jobryant.txauth :as txauth]
-            [bud.backend.env :refer [conn transact config]]
+            [bud.backend.env :refer [conn transact config get-param]]
             [bud.backend.query :as q]
             [bud.backend.tx]
             [compojure.core :refer [defroutes GET POST]]
             [datomic.client.api :as d]
             [datomic.ion.lambda.api-gateway :refer [ionize]]
+            [datomic.ion.cast :as log]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.format-params :refer [wrap-clojure-params]]
-            [ring.middleware.cors :refer [wrap-cors]])
+            [ring.middleware.cors :refer [wrap-cors]]
+            [clojure.java.io :refer [input-stream]])
   (:import com.google.firebase.auth.FirebaseAuth
            [com.google.firebase FirebaseApp FirebaseOptions$Builder]
            com.google.auth.oauth2.GoogleCredentials))
 
 (defn init-firebase! []
-  (let [options (-> (new FirebaseOptions$Builder)
-                    (.setCredentials (GoogleCredentials/getApplicationDefault))
+  (let [credentials (-> :firebase-key
+                        get-param
+                        (.getBytes)
+                        input-stream
+                        (GoogleCredentials/fromStream))
+        options (-> (new FirebaseOptions$Builder)
+                    (.setCredentials credentials)
                     (.setDatabaseUrl "https://budget-6fc5c.firebaseio.com")
                     .build)]
     (FirebaseApp/initializeApp options)))
@@ -64,8 +71,10 @@
 
 (defn wrap-capture [handler]
   (fn [req]
+    (log/event {:msg "got request" :uri (:uri req)})
     (let [result (try (handler req)
                       (catch Exception e
+                        (log/alert {:msg "Unhandled exception in handler" :ex e})
                         (u/pprint e)
                         (println)
                         {:status 500}))]
