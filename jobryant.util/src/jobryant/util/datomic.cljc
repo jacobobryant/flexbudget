@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.spec.alpha :as s]
             [jobryant.util.core :as u]
+            [orchestra.core :refer [defn-spec]]
             [clojure.set :refer [difference]]))
 
 (defn expand-flags [xs]
@@ -78,6 +79,7 @@
        (into {})))
 
 (defn translate-eids [ds-schema eids tx]
+  (u/capture ds-schema eids tx)
   (let [ds-schema (assoc ds-schema :db/id {:db/valueType :db.type/ref})]
     (for [form tx]
       (if (map? form)
@@ -88,7 +90,7 @@
             (contains? #{:db/add :db/retract} op)
             [op @entid attr (translate-value ds-schema eids attr value)]
 
-            (= :db.fn/retractEntity op) [op @entid]
+            (= :db/retractEntity op) [op @entid]
 
             :else xs))))))
 
@@ -98,22 +100,27 @@
 (defn wrap-vec
   "Only for use with Datomic ref values"
   [x]
-  (u/pred-> x (comp not set?) vector))
+  (u/pred-> x (complement (some-fn vector? set?)) vector))
+
+(defn-spec check-ent-spec boolean?
+  [req set? all set? ent map?]
+  (let [ks (-> ent keys set (disj :db/id))
+        registry (s/registry)]
+    (and (empty? (difference req ks))
+         (empty? (difference ks all))
+         (every? #(or (not (contains? registry %))
+                      (every? (partial kv-valid? %) (wrap-vec (get ent %))))
+                 ks))))
 
 (defn ent-spec
   ([req opt]
    (let [req (set req)
          all (into req opt)]
-     (fn [ent]
-       (let [ks (-> ent keys set (disj :db/id))
-             registry (s/registry)]
-         (and (empty? (difference req ks))
-              (empty? (difference ks all))
-              (every? #(or (not (contains? registry %))
-                           (every? (partial kv-valid? %) (wrap-vec (get ent %))))
-                      ks))))))
+     (partial check-ent-spec req all)))
    ([req]
     (ent-spec req nil)))
+
+#?(:clj
 
 (defn eval-txes [db tx]
   (apply concat
@@ -121,3 +128,5 @@
            (if (symbol? op)
              (eval-txes db (apply (u/loadf op) db args))
              [form]))))
+
+)

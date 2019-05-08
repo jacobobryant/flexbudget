@@ -1,6 +1,8 @@
 (ns jobryant.txauth
   (:require [clojure.spec.alpha :as s]
             [datomic.client.api :as d]
+            [datomic.ion.cast :as log]
+            [orchestra.core :refer [defn-spec]]
             [jobryant.util :as u]))
 
 ; todo check backrefs for entities that change spec
@@ -14,10 +16,8 @@
   ([db attr value]
    (not-empty (d/q '[:find ?e :in $ ?a ?v :where [?e ?a ?v]] db attr value))))
 
-(defn ent-valid? [db spec ent]
-  (when (= spec :bud.shared.schema/goal)
-    (def db' db)
-    (u/capture spec ent))
+(defn-spec ent-valid? boolean?
+  [db any? spec any? ent map?]
   (and (s/valid? spec ent)
        (u/for-every? [[k vs] ent
                       v (u/wrap-vec vs)
@@ -29,7 +29,6 @@
            (s/valid? k ent)))))
 
 (defn authorize [authorizers with-fn db uid tx]
-  (u/capture authorizers with-fn db uid tx)
   (let [{:keys [tx-data db-before db-after] :as result} (with-fn db {:tx-data tx})]
     (doseq [[e datoms] (group-by :e (rest tx-data))]
       (let [[before after :as ents]
@@ -43,7 +42,7 @@
                       (and (= (some? spec) (some? ent))
                            (or (nil? spec) (ent-valid? db spec ent))))]
                 (when matches-specs?
-                  (println "matches " specs))
+                  (log/dev {:msg (str "matches " specs)}))
                 (and matches-specs? (authorize-fn
                                       {:uid uid
                                        :db-before db-before
@@ -65,8 +64,13 @@
   (let [tx (:tx params)]
     (if-some [bad-fn (some #(and (symbol? %) (not (contains? allowed %)))
                            (map first tx))]
-      {:status 403
-       :body (str "tx fn not allowed: " bad-fn)}
+      (do
+        (log/alert {:msg "tx not allowed"
+                    :bad-fn bad-fn
+                    :uid uid
+                    :tx tx})
+        {:status 403
+         :body (str "tx fn not allowed: " bad-fn)})
       (try
         {:headers {"Content-type" "application/edn"}
          :body (->> (transact-fn conn {:tx-data [[auth-fn uid tx]]})
@@ -76,6 +80,9 @@
                     pr-str)}
         (catch Exception e
           (do
-            (u/pprint e)
+            (log/alert {:msg "Unhandled exception in tx"
+                        :ex e
+                        :uid uid
+                        :tx tx})
             {:status 403
              :body "tx not allowed"}))))))

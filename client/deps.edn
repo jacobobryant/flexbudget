@@ -15,4 +15,4 @@
   me.raynes/fs {:mvn/version "1.4.6"}
   reagent {:mvn/version "0.8.1"}
   com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
-  cljs-http {:mvn/version "0.1.46"}}}
+  jobryant/cljs-http {:local/root "../cljs-http"}}}

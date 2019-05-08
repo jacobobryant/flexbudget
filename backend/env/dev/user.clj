@@ -5,7 +5,8 @@
             [orchestra.spec.test :as st]
             [bud.backend.core :as core]
             [compute.datomic-client-memdb.core]
-            [aleph.http :as aleph]))
+            [immutant.web :as imm]
+            [datomic.ion.cast :refer [initialize-redirect]]))
 
 (comment
   (nrepl.server/start-server :port 7888)
@@ -16,21 +17,23 @@
 
 )
 
+(initialize-redirect :stdout)
+
 (st/instrument)
 
-(defn start-aleph []
-  (aleph/start-server
+(defn start-immutant []
+  (imm/run
     core/handler'
-    {:port 8080}))
+    {:port 8080 }))
 
-(defstate server :start (start-aleph)
-                 :stop (.close server))
+(defstate server :start (start-immutant)
+                 :stop (imm/stop))
 
 (defn nrepl []
   (start-server :port 7888))
 
 (defn go []
-  ;(mount/start)
+  (mount/start)
   (println :ready))
 
 (defmacro reset []

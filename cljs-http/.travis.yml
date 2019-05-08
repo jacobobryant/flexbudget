@@ -1,0 +1,7 @@
+language: clojure
+lein: lein
+sudo: required
+addons:
+  chrome: stable
+install:
+  - npm install

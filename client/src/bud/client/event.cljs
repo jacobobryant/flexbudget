@@ -40,7 +40,7 @@
                :delta/frequency :monthly}]))
 
 (defn rm! [id]
-  (transact! [[:db.fn/retractEntity id]]))
+  (transact! [[:db/retractEntity id]]))
 
 (defn save! [ent]
   (transact! [(->> ent

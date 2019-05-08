@@ -72,35 +72,26 @@
 
 (defn wrap-capture [handler]
   (fn [req]
-    (log/event {:msg "got request"
-                :uri (:uri req)
-                :conn-type (type conn)
-                :should-start (contains? #{mount.core.NotStartedState mount.core.DerefableState} (type conn))})
+    (log/event {:msg "got request" :uri (:uri req)})
     (when (contains? #{mount.core.NotStartedState mount.core.DerefableState} (type conn))
       (log/event {:msg "Started mount" :result (mount/start)}))
-    (let [result (try (handler req)
+    (let [response (try (handler req)
                       (catch Exception e
                         (log/alert {:msg "Unhandled exception in handler" :ex e})
-                        (u/pprint e)
-                        (println)
                         {:status 500}))]
-      (when (not= 200 (:status result))
-        (u/capture req)
-        (u/pprint req)
-        (println)
-        (u/pprint result)
-        (println)
-        (println (:uri req) "failed"))
-      result)))
+      (log/dev {:msg "request response"
+                :request-params (:params req)
+                :response-body (:body response)})
+      response)))
 
 (def handler' (-> routes
                   wrap-uid
+                  wrap-capture
                   wrap-clojure-params
                   (wrap-defaults api-defaults)
                   (wrap-cors
                     :access-control-allow-origin [#"http://dev.impl.sh:8000" #"https://impl.sh"]
                     :access-control-allow-methods [:get :post]
-                    :access-control-allow-headers ["Authorization" "Content-Type"])
-                  wrap-capture))
+                    :access-control-allow-headers ["Authorization" "Content-Type"])))
 
 (def handler (ionize handler'))
