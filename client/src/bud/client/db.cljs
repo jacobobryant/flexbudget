@@ -50,5 +50,13 @@
                                      (reduce + @net-assets))))
 (def weekly-allowance (reaction (calc/weekly-allowance @forecasted-total @goal)))
 (def surplus (reaction (calc/surplus @forecasted-total @goal)))
-(def max-asset-order (reaction (->> @assets (map :misc/order) (apply max))))
-(def max-delta-order (reaction (->> @deltas (map :misc/order) (apply max))))
+
+(defn max-order [ents]
+  (or
+    (->> ents
+         (map #(or (:misc/order %) -1))
+         (apply max))
+    -1))
+
+(def max-asset-order (reaction (max-order @assets)))
+(def max-delta-order (reaction (max-order @deltas)))

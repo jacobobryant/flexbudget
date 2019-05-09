@@ -24,7 +24,7 @@
 (defn start-immutant []
   (imm/run
     core/handler'
-    {:port 8080 }))
+    {:port 8080}))
 
 (defstate server :start (start-immutant)
                  :stop (imm/stop))

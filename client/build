@@ -11,7 +11,6 @@ function fig {
 }
 
 function serve {
-  (sleep 0.5; firefox dev.impl.sh:8000) &
   python -m http.server -d target/dev
 }
 

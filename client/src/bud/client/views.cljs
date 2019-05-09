@@ -139,7 +139,7 @@
              (if (neg? @db/surplus) "over" "under"))])
 
 (defn main []
-  (let [tab (r/atom ::goals)]
+  (let [tab (r/atom ::assets)]
     (fn []
       [rc/v-box
        [header]
@@ -154,9 +154,9 @@
           [rc/gap :size "0px"]
           [rc/horizontal-tabs
            :model tab
-           :tabs [{:id ::goals :label "Goals"}
-                  {:id ::assets :label "Current funds"}
-                  {:id ::recurring :label "Income & Expenses"}]]
+           :tabs [{:id ::assets :label "Current funds"}
+                  {:id ::recurring :label "Income & Expenses"}
+                  {:id ::goals :label "Goals"}]]
           (rc/case @tab
             ::assets [assets]
             ::recurring [deltas]

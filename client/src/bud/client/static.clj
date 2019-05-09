@@ -77,9 +77,11 @@
        [:div.row
         [:div.col-lg-6
          (rc/gap "30px")
-         (rc/p {:style {:text-align "center"}}
-               "FlexBudget gives you a flexible way to budget, yo.")
-         [:div#firebaseui-auth-container]]
+         [:div#firebaseui-auth-container]
+         (rc/p "FlexBudget is a dead-simple tool that gives you a
+               high-level understanding of your spending habits
+               without forcing you to fill out a detailed budget.")
+         (rc/p "See the video for a short demonstration.")]
         [:div.col-lg-4
          [:img.h-75.mt-4 {:style {:box-shadow "0 0 7px 10px gray"}
                           :src "/img/llama.jpg"}]]]]]))

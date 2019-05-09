@@ -75,25 +75,30 @@
     (log/event {:msg "got request" :uri (:uri req)})
     (when (contains? #{mount.core.NotStartedState mount.core.DerefableState} (type conn))
       (log/event {:msg "Started mount" :result (mount/start)}))
-    (let [response (try (handler req)
-                      (catch Exception e
-                        (log/alert {:msg "Unhandled exception in handler" :ex e})
-                        {:status 500}))]
+    (let [response (handler req)]
       (log/dev {:msg "request response"
                 :request-params (:params req)
                 :response-body (:body response)})
       response)))
 
+(defn wrap-catchall [handler]
+  (fn [req]
+    (try (handler req)
+         (catch Exception e
+           (log/alert {:msg "Unhandled exception in handler" :ex e})
+           {:status 500}))))
+
 (def handler' (-> routes
                   wrap-uid
                   wrap-capture
+                  (wrap-cors
+                    :access-control-allow-origin [#"http://dev.notjust.us:8000"
+                                                  #"https://notjust.us"
+                                                  #"https://www.notjust.us"]
+                    :access-control-allow-methods [:get :post]
+                    :access-control-allow-headers ["Authorization" "Content-Type"])
                   wrap-clojure-params
                   (wrap-defaults api-defaults)
-                  (wrap-cors
-                    :access-control-allow-origin [#"http://dev.impl.sh:8000" #"https://impl.sh"
-                                                  #"https://notjust.us" #"https://www.notjust.us"]
-                    :access-control-allow-methods [:get :post]
-                    :access-control-allow-headers ["Authorization" "Content-Type"])))
-
+                  wrap-catchall))
 
 (def handler (ionize handler'))

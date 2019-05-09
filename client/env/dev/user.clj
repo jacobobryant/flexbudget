@@ -20,6 +20,3 @@
 
 (defn gensite []
   (static/gensite "target/dev"))
-
-(defn reset []
-  (tn/refresh :user 'user/gensite))

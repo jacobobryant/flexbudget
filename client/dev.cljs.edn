@@ -1,4 +1,4 @@
-^{:open-url "http://dev.impl.sh:8000/app/"}
+^{:open-url "http://dev.notjust.us:8000/app/"}
 {:main bud.client.core
  :output-to "target/dev/cljs/main.js"
  :output-dir "target/dev/cljs/"
