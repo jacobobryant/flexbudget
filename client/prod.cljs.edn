@@ -1,4 +1,5 @@
 {:optimizations :advanced,
  :infer-externs true,
  :output-to "target/prod/cljs/main.js",
- :output-dir "target/tmp"}
+ :output-dir "target/tmp"
+ :closure-defines {bud.client.config/backend-host "https://3tycxho9rj.execute-api.us-east-1.amazonaws.com/dev"}}

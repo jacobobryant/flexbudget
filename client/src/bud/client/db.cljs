@@ -5,6 +5,7 @@
             [clojure.pprint :refer [pprint]]
             [jobryant.datascript.core :as d]
             [cljs-time.core :refer [before? today]]
+            [clojure.string :refer [join]]
             [bud.client.calc :as calc]
             [bud.shared.schema :refer [schema]])
   (:require-macros [jobryant.datascript.core :refer [defq]]))
@@ -17,18 +18,22 @@
 (defonce conn (d/create-conn (u/datascript-schema schema)))
 (defonce loading? (r/atom true))
 
+(defn db-id [ent]
+  (let [id (:form ((:jobryant.datascript.core/eids @conn) (:db/id ent)))]
+    (str (join (repeat (- 25 (count id)) "0") id))))
+
 (defq entries
   (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               (or [?e :entry/draft]
                   [?e :entry/data])])
-       (sort-by :db/id)))
+       (sort-by db-id)))
 
 (defq deltas
   (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               [?e :delta/frequency]])
-       (sort-by :db/id)))
+       (sort-by db-id)))
 
 (defq goal
   (d/q '[:find (pull ?goal [*]) . :where

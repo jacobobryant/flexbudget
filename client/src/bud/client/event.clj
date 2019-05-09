@@ -1,13 +1,9 @@
 (ns bud.client.event
-  (:require [jobryant.util :refer [js<!]]
-            [bud.shared.config :as c]))
+  (:require [jobryant.util :refer [js<!]]))
 
 (defmacro request
   ([method uri payload]
    `(cljs.core.async/<!
-      (~method (str c/backend-host ~uri)
-               (merge {:with-credentials? false
-                       :oauth-token (js<! (bud.client.db/token))}
-                      ~payload))))
+      (request* ~method ~uri ~payload (js<! (bud.client.db/token)))))
   ([method uri]
    `(request ~method ~uri {})))

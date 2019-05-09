@@ -20,6 +20,12 @@ function deploy {
   ./deploy
 }
 
+function commit {
+  mv .gitbak .git
+  git commit -a -m hey
+  mv .git .gitbak
+}
+
 cmd="$1"
 shift
 $cmd "$@"
