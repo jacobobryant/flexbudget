@@ -1,17 +1,23 @@
 (ns bud.client.calc
   (:require [cljs-time.core :refer [plus weeks months years before? today in-days interval]]))
 
+(defn frequency [freq-keyword]
+  (case freq-keyword
+    :weekly (weeks 1)
+    :monthly (months 1)
+    :yearly (years 1)))
+
+(defn days-in [freq-keyword]
+  (in-days (interval (today) (plus (today) (frequency freq-keyword)))))
+
 (defn forecast [goal-date
                 {amount :misc/amount
                  basis :delta/basis
-                 frequency :delta/frequency}]
-  (let [frequency (case frequency
-                    :weekly (weeks 1)
-                    :monthly (months 1)
-                    :yearly (years 1))
+                 freq :delta/frequency}]
+  (let [freq (frequency freq)
         today (today)]
     (* amount
-       (->> (iterate #(plus % frequency) basis)
+       (->> (iterate #(plus % freq) basis)
             (drop-while #(before? % today))
             (take-while #(before? % goal-date))
             count))))

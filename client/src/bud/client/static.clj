@@ -82,8 +82,7 @@
          [:div#firebaseui-auth-container]]
         [:div.col-lg-4
          [:img.h-75.mt-4 {:style {:box-shadow "0 0 7px 10px gray"}
-                     :src "/img/llama.jpg"
-                }]]]]]))
+                          :src "/img/llama.jpg"}]]]]]))
 
 (def app
   (html

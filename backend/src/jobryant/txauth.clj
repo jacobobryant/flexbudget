@@ -34,28 +34,31 @@
       (let [[before after :as ents]
             (map #(when (exists? % e) (d/pull % '[*] e)) [db-before db-after])
 
+            auth-arg {:uid uid
+                      :db-before db-before
+                      :db-after db-after
+                      :datoms datoms
+                      :before before
+                      :after after
+                      :eid e}
+
+            matching-authorizers
+            (filter (fn [[specs _]]
+                      (u/for-every? [[spec ent db]
+                                     (map vector specs ents [db-before db-after])]
+                          (and (= (some? spec) (some? ent))
+                               (or (nil? spec) (ent-valid? db spec ent)))))
+                    authorizers)
+
             authorized?
-            (u/for-some? [[specs authorize-fn] authorizers]
-              (let [matches-specs?
-                    (u/for-every? [[spec ent db]
-                                   (map vector specs ents [db-before db-after])]
-                      (and (= (some? spec) (some? ent))
-                           (or (nil? spec) (ent-valid? db spec ent))))]
-                (when matches-specs?
-                  (log/dev {:msg (str "matches " specs)}))
-                (and matches-specs? (authorize-fn
-                                      {:uid uid
-                                       :db-before db-before
-                                       :db-after db-after
-                                       :datoms datoms
-                                       :before before
-                                       :after after
-                                       :eid e}))))]
+            (u/for-some? [[_ authorize-fn] matching-authorizers]
+              (authorize-fn auth-arg))]
 
         (when (not authorized?)
+          (u/capture auth-arg authorizers)
           (throw (ex-info "Entity change not authorized"
-                          {:before before
-                           :after after})))))
+                          {:auth-arg auth-arg
+                           :matches matching-authorizers})))))
     tx))
 
 (defn handler [{:keys [allowed transact-fn conn auth-fn params uid]

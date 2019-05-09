@@ -16,6 +16,7 @@
 
    :misc/description [:db.type/string]
    :misc/amount [:db.type/long]
+   :misc/order [:db.type/long]
 
    :delta/frequency [:db.type/keyword]
    :delta/basis [:db.type/instant]
@@ -28,7 +29,7 @@
 
 (s/def ::goal (u/ent-spec [:auth/owner :goal/allowance :goal/date :misc/amount]))
 (s/def ::delta (u/ent-spec [:auth/owner :delta/frequency :misc/amount :misc/description]
-                            [:delta/basis]))
-(s/def :entry/asset (u/ent-spec [:misc/amount :misc/description]))
+                            [:delta/basis :misc/order]))
+(s/def :entry/asset (u/ent-spec [:misc/amount :misc/description] [:misc/order]))
 (s/def ::entry.draft (u/ent-spec [:auth/owner :entry/draft] [:entry/asset]))
 (s/def ::entry (u/ent-spec [:auth/owner :entry/date] [:entry/asset]))

@@ -109,7 +109,7 @@
        :width "150px"]
       [datepicker {:ent ent
                    :k :delta/basis
-                   :placeholder "Basis"}]
+                   :placeholder "Starting date"}]
       [rm-ent ent]])
    [add-ent event/delta!]])
 
@@ -155,8 +155,8 @@
           [rc/horizontal-tabs
            :model tab
            :tabs [{:id ::goals :label "Goals"}
-                  {:id ::assets :label "Assets & Current Expenses"}
-                  {:id ::recurring :label "Income & Recurring Expenses"}]]
+                  {:id ::assets :label "Current funds"}
+                  {:id ::recurring :label "Income & Expenses"}]]
           (rc/case @tab
             ::assets [assets]
             ::recurring [deltas]

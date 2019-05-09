@@ -4,7 +4,7 @@
             [jobryant.util :as u]
             [clojure.pprint :refer [pprint]]
             [jobryant.datascript.core :as d]
-            [cljs-time.core :refer [before? today]]
+            [cljs-time.core :as ctime :refer [before? today in-days]]
             [clojure.string :refer [join]]
             [bud.client.calc :as calc]
             [bud.shared.schema :refer [schema]])
@@ -18,22 +18,20 @@
 (defonce conn (d/create-conn (u/datascript-schema schema)))
 (defonce loading? (r/atom true))
 
-(defn db-id [ent]
-  (let [id (:form ((:jobryant.datascript.core/eids @conn) (:db/id ent)))]
-    (str (join (repeat (- 25 (count id)) "0") id))))
+(defn sort-amount [ent]
+  (- (get ent :misc/amount ##-Inf)))
 
 (defq entries
   (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               (or [?e :entry/draft]
-                  [?e :entry/data])])
-       (sort-by db-id)))
+                  [?e :entry/data])])))
 
 (defq deltas
   (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               [?e :delta/frequency]])
-       (sort-by db-id)))
+       (sort-by (juxt :misc/order sort-amount))))
 
 (defq goal
   (d/q '[:find (pull ?goal [*]) . :where
@@ -42,7 +40,7 @@
 
 (def entry (reaction (last @entries)))
 (def draft? (reaction (:entry/draft @entry)))
-(def assets (reaction (sort-by :db/id (:entry/asset @entry))))
+(def assets (reaction (sort-by (juxt :misc/order sort-amount) (:entry/asset @entry))))
 (def goal-complete? (reaction (and (every? #(contains? @goal %) [:misc/amount :goal/date])
                                    (before? (today) (:goal/date @goal)))))
 (def net-assets (reaction (->> @assets (map :misc/amount) (reduce +))))
@@ -52,3 +50,5 @@
                                      (reduce + @net-assets))))
 (def weekly-allowance (reaction (calc/weekly-allowance @forecasted-total @goal)))
 (def surplus (reaction (calc/surplus @forecasted-total @goal)))
+(def max-asset-order (reaction (->> @assets (map :misc/order) (apply max))))
+(def max-delta-order (reaction (->> @deltas (map :misc/order) (apply max))))

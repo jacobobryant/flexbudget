@@ -36,13 +36,15 @@
   (transact! [{:db/id (:db/id @db/entry)
                :entry/asset [{:db/id "tmp"
                               :misc/amount 0
-                              :misc/description ""}]}]))
+                              :misc/description ""
+                              :misc/order (inc @db/max-asset-order)}]}]))
 
 (defn delta! []
   (transact! [{:db/id "tmp"
                :auth/owner [:user/uid (db/uid)]
                :misc/amount 0
                :misc/description ""
+               :misc/order (inc @db/max-delta-order)
                :delta/frequency :monthly}]))
 
 (defn rm! [id]
