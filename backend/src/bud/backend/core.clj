@@ -90,8 +90,10 @@
                   wrap-clojure-params
                   (wrap-defaults api-defaults)
                   (wrap-cors
-                    :access-control-allow-origin [#"http://dev.impl.sh:8000" #"https://impl.sh"]
+                    :access-control-allow-origin [#"http://dev.impl.sh:8000" #"https://impl.sh"
+                                                  #"https://notjust.us" #"https://www.notjust.us"]
                     :access-control-allow-methods [:get :post]
                     :access-control-allow-headers ["Authorization" "Content-Type"])))
+
 
 (def handler (ionize handler'))

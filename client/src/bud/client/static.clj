@@ -4,6 +4,7 @@
             [jobryant.util :as u]
             [bud.client.color :as color]
             [bud.client.shared :refer [navbar]]
+            [clojure.string :refer [ends-with?]]
             [clojure.java.io :refer [make-parents]]
             [clojure.java.shell :refer [sh]]))
 
@@ -40,7 +41,7 @@
   ;[:script "if (firebase.auth().currentUser == null) window.location.href = \"/\";"])
 
 (def ensure-logged-out
-  [:script "firebase.auth().onAuthStateChanged(u => { if (u) window.location.href = '/app.html'; });"])
+  [:script "firebase.auth().onAuthStateChanged(u => { if (u) window.location.href = '/app/'; });"])
   ;[:script "if (firebase.auth().currentUser != null) window.location.href = \"/app.html\";"])
 
 (def firebase-ui
@@ -94,12 +95,12 @@
      [:div#app {:style {:height "inherit"}}]
      [:script "window.onload = function () { bud.client.core._main(); }"]]))
 
-(def routes {"/index.html" landing
-             "/app.html" app})
+(def routes {"/" landing
+             "/app/" app})
 
 (defn gensite [root]
   (sh "rsync" "-a" "--delete" "--exclude" "cljs" "assets/" root)
   (doseq [[path contents] routes]
-    (let [path (str root path)]
+    (let [path (str root path (when (ends-with? path "/") "index.html"))]
       (make-parents path)
       (spit path contents))))
