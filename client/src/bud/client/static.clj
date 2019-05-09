@@ -73,18 +73,26 @@
       firebase ensure-logged-out bootstrap-4 firebase-ui)
     [:body
       (navbar)
+      (rc/gap "30px")
       [:div.container
        [:div.row
         [:div.col-lg-6
-         (rc/gap "30px")
-         [:div#firebaseui-auth-container]
-         (rc/p "FlexBudget is a dead-simple tool that gives you a
+         (rc/p "FlexBudget is a simple tool that gives you a
                high-level understanding of your spending habits
                without forcing you to fill out a detailed budget.")
-         (rc/p "See the video for a short demonstration.")]
-        [:div.col-lg-4
-         [:img.h-75.mt-4 {:style {:box-shadow "0 0 7px 10px gray"}
-                          :src "/img/llama.jpg"}]]]]]))
+         (rc/p
+           "See the video for a short demonstration.")
+         [:div#firebaseui-auth-container]]
+        [:div.col-lg-6
+         [:iframe {:width "560"
+                   :height "315"
+                   :style {:border-width "1px"
+                           :border-style "solid"
+                           :border-color "black"}
+                   :src "https://www.youtube.com/embed/e5z0brseEV0"
+                   :frameborder "0"
+                   :allow "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                   :allowfullscreen true}]]]]]))
 
 (def app
   (html

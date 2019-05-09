@@ -20,4 +20,4 @@
     (interpose (gap) (filter some? children))))
 
 (defview p [opts contents]
-  (into [:p.mx-auto opts] contents))
+  (into [:p.mx-auto (update opts :style #(merge {:max-width "450px"} %))] contents))
