@@ -17,12 +17,11 @@ function proxy {
 }
 
 function deploy {
-  ./deploy
-}
-
-function commit {
   mv .gitbak .git
   git commit -a -m hey
+  git status
+  read -p "look good? "
+  ./deploy
   mv .git .gitbak
 }
 
