@@ -25,7 +25,7 @@
   (->> @conn
        (d/q '[:find [(pull ?e [*]) ...] :where
               (or [?e :entry/draft]
-                  [?e :entry/data])])))
+                  [?e :entry/date])])))
 
 (defq deltas
   (->> @conn
