@@ -1,4 +1,4 @@
 {:paths ["src"]
  :deps
- {jobryant.util {:local/root "../jobryant.util"}
+ {jobryant/util {:mvn/version "1.0"}
   org.clojure/clojure {:mvn/version "1.9.0"}}}

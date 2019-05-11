@@ -5,14 +5,10 @@
                      com.datomic/ion-dev {:mvn/version "0.9.186"}}}
   :local {:extra-paths ["env/dev"]
           :extra-deps {nrepl {:mvn/version "0.6.0"}
-                       compute/datomic-client-memdb
-                       {:git/url "https://github.com/ComputeSoftware/datomic-client-memdb.git"
-                        :sha "fd880e70b45a0837f1604aa1230047cb74ec536e"}
                        org.immutant/web {:mvn/version "2.1.10"}
-                       org.clojure/tools.namespace {:mvn/version "0.2.11"}
-                       jobryant.datomic {:local/root "../jobryant.datomic"}}}}
+                       org.clojure/tools.namespace {:mvn/version "0.2.11"}}}}
  :deps
- {jobryant.util {:local/root "../jobryant.util"}
+ {jobryant/util {:mvn/version "1.0"}
   mount {:mvn/version "0.1.15"}
   shared {:local/root "../shared"}
   com.datomic/ion {:mvn/version "0.9.28"}

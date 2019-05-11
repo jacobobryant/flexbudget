@@ -6,9 +6,9 @@
                      nrepl {:mvn/version "0.6.0"}
                      }}}
  :deps
- {jobryant.util {:local/root "../jobryant.util"}
-  jobryant.datomic {:local/root "../jobryant.datomic"}
-  jobryant.views {:local/root "../jobryant.views"}
+ {jobryant/util {:mvn/version "1.0"}
+  jobryant/datomic {:mvn/version "1.0"}
+  jobryant/views {:mvn/version "1.0"}
   shared {:local/root "../shared"}
   org.clojure/clojure {:mvn/version "1.9.0"}
   orchestra {:mvn/version "2019.02.06-1"}

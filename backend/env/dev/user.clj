@@ -4,7 +4,6 @@
             [nrepl.server :refer [start-server]]
             [orchestra.spec.test :as st]
             [bud.backend.core :as core]
-            [compute.datomic-client-memdb.core]
             [immutant.web :as imm]
             [datomic.ion.cast :refer [initialize-redirect]]))
 
