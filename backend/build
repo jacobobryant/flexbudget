@@ -1,30 +1,32 @@
 #!/bin/bash
 set -x
 set -e
+export PATH=../bin/:$PATH
 
 function repl {
   export DATOMIC_ENV_MAP="$(cat env.edn)"
   clj -A:dev:local -e "(do (nrepl) (go))" -r
 }
 
-function push {
-  clojure -A:dev -m datomic.ion.dev "{:op :push :uname \"$(uuidgen)\"}"
-  #clojure -A:dev -m datomic.ion.dev "{:op :push}"
-}
-
 function proxy {
   datomic-socks-proxy bud
 }
 
-function deploy {
-  mv .gitbak .git
-  git commit -a -m hey
-  git status
-  read -p "look good? "
-  iondeploy
-  mv .git .gitbak
+function cleanup-git {
+  rm -rf .git
 }
 
-cmd="$1"
-shift
-$cmd "$@"
+function deploy {
+  if ! (git status | grep -q "nothing to commit"); then
+    echo Must deploy with a clean commit.
+  fi
+  uname=$(git rev-parse HEAD)
+  files="$(git ls-files)"
+  git init
+  trap cleanup-git INT
+  git add $files
+  git commit -m $uname
+  iondeploy $uname
+}
+
+"$@"

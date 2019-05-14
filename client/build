@@ -20,6 +20,4 @@ function push {
   firebase deploy
 }
 
-cmd="$1"
-shift
-$cmd "$@"
+"$@"

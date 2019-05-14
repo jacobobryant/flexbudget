@@ -1,0 +1,22 @@
+#!/usr/bin/iondeploy
+(ns iondeploy.core
+  (:require [planck.shell :as shell]
+            [planck.core :refer [read-string]]))
+
+(defn sh [& args]
+  (let [result (apply shell/sh args)]
+    (if (= 0 (:exit result))
+      (:out result)
+      (throw (ex-info (:err result) {})))))
+
+(let [[uname] *command-line-args*
+      push-out (sh "clojure" "-Adev" "-m" "datomic.ion.dev"
+                   (str {:op :push :uname uname}))
+      _ (print push-out)
+      deploy-cmd (get-in (read-string (str "[" push-out "]")) [1 :deploy-command])
+      deploy-out (sh "bash" "-c" deploy-cmd)
+      _ (print deploy-out)
+      status-cmd (:status-command (read-string deploy-out))]
+  (while true
+    (print (sh "bash" "-c" status-cmd))
+    (sh "sleep" "5")))
