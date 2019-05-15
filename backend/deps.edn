@@ -8,9 +8,14 @@
                        org.immutant/web {:mvn/version "2.1.10"}
                        org.clojure/tools.namespace {:mvn/version "0.2.11"}}}}
  :deps
- {jobryant/util {:mvn/version "1.0"}
+ {shared {:local/root "../shared"}
+
+  jobryant/datomic-cloud {:local/root "../../jobryant/datomic-cloud"} ;:mvn/version "1.0-SNAPSHOT"}
+  jobryant/util {:local/root "../../jobryant/util"} ; :mvn/version "1.1-SNAPSHOT"}
+  jobryant/firebase {:mvn/version "1.0-SNAPSHOT"}
+  jobryant/ion {:local/root "../../jobryant/ion"}
+  jobryant/trident {:local/root "../../jobryant/trident"}
   mount {:mvn/version "0.1.15"}
-  shared {:local/root "../shared"}
   com.datomic/ion {:mvn/version "0.9.28"}
   org.clojure/data.json {:mvn/version "0.2.6"}
   org.clojure/clojure {:mvn/version "1.9.0"}
@@ -19,7 +24,7 @@
   ring/ring-defaults {:mvn/version "0.3.2"}
   ring-cors {:mvn/version "0.1.13"}
   ring-middleware-format {:mvn/version "0.7.4"}
-  com.google.firebase/firebase-admin {:mvn/version "6.8.1"}
+  com.taoensso/timbre {:mvn/version "4.10.0"}
 
   com.cognitect/transit-java #:mvn{:version "0.8.311"},
   commons-codec/commons-codec #:mvn{:version "1.10"},

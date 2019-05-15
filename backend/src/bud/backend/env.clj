@@ -3,6 +3,7 @@
             [bud.shared.schema :refer [datomic-schema]]
             [datomic.ion :as ion]
             [jobryant.util :as u]
+            [jobryant.datomic-cloud.client :refer [connect]]
             [mount.core :refer [defstate start]]
             [clojure.walk :refer [keywordize-keys]]))
 
@@ -33,26 +34,8 @@
 (defstate client :start (d/client (:client-cfg config)))
 
 (defstate conn :start
-  (let [with-args #(% client (select-keys config [:db-name]))]
-    (do
-      (with-args d/create-database)
-      (let [conn (with-args d/connect)]
-        (d/transact conn {:tx-data datomic-schema})
-        conn))))
-
-(def transact (if (:local-tx-fns? config)
-                (let [lock (Object.)]
-                  (fn [conn arg-map]
-                    (locking lock
-                      (->> #(u/eval-txes (d/with-db conn) %)
-                           (update arg-map :tx-data)
-                           (d/transact conn)))))
-                d/transact))
-
-(def with (if (:local-tx-fns? config)
-            (fn [db arg-map]
-              (u/capture db arg-map)
-              (->> #(u/eval-txes db %)
-                   (update arg-map :tx-data)
-                   (d/with db)))
-            d/with))
+  (do
+    (d/create-database client (select-keys config [:db-name]))
+    (let [conn (connect client (select-keys config [:db-name :local-tx-fns?]))]
+      (d/transact conn {:tx-data datomic-schema})
+      conn)))

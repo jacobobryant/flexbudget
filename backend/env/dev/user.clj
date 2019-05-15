@@ -3,6 +3,8 @@
             [mount.core :as mount :refer [defstate]]
             [nrepl.server :refer [start-server]]
             [orchestra.spec.test :as st]
+            [datomic.client.api.protocols :as client-proto]
+            [jobryant.util :as u]
             [bud.backend.core :as core]
             [immutant.web :as imm]
             [datomic.ion.cast :refer [initialize-redirect]]))
@@ -14,6 +16,16 @@
   (require '[clojure.tools.namespace.repl :as tn])
   (tn/refresh)
 
+  (u/pprint
+    (macroexpand-1
+      '(u/inherit LocalTxDb [db]
+         client-proto/Db
+         (with [_ arg-map]
+           (->> #(u/eval-txes db %)
+                (update arg-map :tx-data)
+                (d/with db)))
+         )))
+
 )
 
 (initialize-redirect :stdout)
@@ -22,7 +34,7 @@
 
 (defn start-immutant []
   (imm/run
-    core/handler'
+    core/handler*
     {:port 8080}))
 
 (defstate server :start (start-immutant)
