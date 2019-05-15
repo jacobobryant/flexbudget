@@ -4,7 +4,6 @@
             [bud.shared.schema :refer [ds-schema]]))
 
 (defn datoms-for [db uid]
-  (u/capture db uid)
   (let [user-eid (:db/id (d/pull db [:db/id] [:user/uid uid]))]
     (->>
       (conj

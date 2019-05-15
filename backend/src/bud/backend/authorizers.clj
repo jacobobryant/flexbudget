@@ -40,9 +40,9 @@
               [?e :auth/owner ?user]
               [?e :goal/allowance]
               (not-join [?user ?e]
-                        [?other :auth/owner ?user]
-                        [?other :goal/allowance]
-                        [(not= ?e ?other)])]
+                [?other :auth/owner ?user]
+                [?other :goal/allowance]
+                [(not= ?e ?other)])]
             db-after (:db/id after) [:user/uid uid])))
    [::schema/goal ::schema/goal] owns?
 

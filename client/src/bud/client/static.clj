@@ -1,6 +1,6 @@
 (ns bud.client.static
-  (:require [jobryant.hiccup.core :as hiccup]
-            [jobryant.re-com.core :as rc]
+  (:require [jobryant.views.hiccup :as hiccup]
+            [jobryant.views.re-com :as rc]
             [jobryant.util :as u]
             [bud.client.color :as color]
             [bud.client.shared :refer [navbar]]
@@ -38,11 +38,9 @@
 
 (def ensure-logged-in
   [:script "firebase.auth().onAuthStateChanged(u => { if (!u) window.location.href = '/'; });"])
-  ;[:script "if (firebase.auth().currentUser == null) window.location.href = \"/\";"])
 
 (def ensure-logged-out
   [:script "firebase.auth().onAuthStateChanged(u => { if (u) window.location.href = '/app/'; });"])
-  ;[:script "if (firebase.auth().currentUser != null) window.location.href = \"/app.html\";"])
 
 (def firebase-ui
   (list [:script {:src "https://cdn.firebase.com/libs/firebaseui/3.6.0/firebaseui.js"}]

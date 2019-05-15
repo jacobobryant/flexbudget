@@ -3,17 +3,20 @@
             [jobryant.datascript.core :as d]
             [jobryant.util :as u]
             [bud.client.config :as c]
+            [cljs.reader :refer [read-string]]
             [cljs-time.core :refer [today plus years]]
             [cljs-http.client :as http]
             [cljs.core.async])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [bud.client.event :refer [request]]))
 
-(defn request* [method uri payload token]
-  (method (str c/backend-host uri)
-          (merge {:with-credentials? false
-                  :oauth-token token}
-                 payload)))
+(let [edn-opts {:readers {'eid #(tagged-literal 'eid %)}}]
+  (defn request* [method uri payload token]
+    (with-redefs [read-string (partial read-string edn-opts)]
+      (method (str c/backend-host uri)
+              (merge {:with-credentials? false
+                      :oauth-token token}
+                     payload)))))
 
 (defn persist [tx]
   (go (:body (request http/post "/tx" {:edn-params {:tx tx}}))))

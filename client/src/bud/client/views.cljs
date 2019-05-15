@@ -1,7 +1,7 @@
 (ns bud.client.views
   (:require [reagent.core :as r]
             [reagent.ratom :refer-macros [reaction]]
-            [jobryant.re-com.core :as rc]
+            [jobryant.views.re-com :as rc]
             [jobryant.util :as u]
             [bud.client.color :as color]
             [bud.client.db :as db]
@@ -44,7 +44,7 @@
       [:tr (rc/for [td r] [:td cell-style td])])]])
 
 (defn parse-currency [s]
-  (int (* (js/parseFloat s) 100)))
+  (.round js/Math (* (js/parseFloat s) 100)))
 
 (defn amount-input
   ([ent k]
@@ -88,10 +88,6 @@
                      :on-change #(event/save! (assoc ent k %))}
                     (select-keys opts [:placeholder :minimum]))]
     (reduce into [rc/datepicker-dropdown] opts)))
-
-;todo fix goal datepicker
-; fix datepicker width
-; make events persist
 
 (defn deltas []
   [rc/v-box {:style {:width "900px"}}
@@ -143,7 +139,6 @@
     (fn []
       [rc/v-box
        [header]
-       ;[navbar {:dark? true :show-logout? true}]
        (if @db/loading?
          [rc/throbber
           :style {:align-self "center"}

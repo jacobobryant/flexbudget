@@ -5,7 +5,7 @@ export PATH=../bin/:$PATH
 
 function repl {
   export DATOMIC_ENV_MAP="$(cat env.edn)"
-  clj -A:dev:local -e "(do (nrepl) (go))" -r
+  clj -A:dev -e "(go)" -r
 }
 
 function proxy {

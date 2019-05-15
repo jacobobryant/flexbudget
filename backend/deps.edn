@@ -1,16 +1,15 @@
 {:paths ["src" "resources"]
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
  :aliases
- {:dev {:extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
-                     com.datomic/ion-dev {:mvn/version "0.9.186"}}}
-  :local {:extra-paths ["env/dev"]
-          :extra-deps {nrepl {:mvn/version "0.6.0"}
-                       org.immutant/web {:mvn/version "2.1.10"}
-                       org.clojure/tools.namespace {:mvn/version "0.2.11"}}}}
+ {:dev {:extra-paths ["env/dev"]
+        :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
+                     com.datomic/ion-dev {:mvn/version "0.9.186"}
+                     jobryant/trident-dev {:local/root "../../jobryant/target/trident-dev"}}}}
  :deps
- {jobryant/util {:mvn/version "1.0"}
+ {shared {:local/root "../shared"}
+  jobryant/trident {:local/root "../../jobryant/target/trident"}
+
   mount {:mvn/version "0.1.15"}
-  shared {:local/root "../shared"}
   com.datomic/ion {:mvn/version "0.9.28"}
   org.clojure/data.json {:mvn/version "0.2.6"}
   org.clojure/clojure {:mvn/version "1.9.0"}
@@ -19,7 +18,7 @@
   ring/ring-defaults {:mvn/version "0.3.2"}
   ring-cors {:mvn/version "0.1.13"}
   ring-middleware-format {:mvn/version "0.7.4"}
-  com.google.firebase/firebase-admin {:mvn/version "6.8.1"}
+  com.taoensso/timbre {:mvn/version "4.10.0"}
 
   com.cognitect/transit-java #:mvn{:version "0.8.311"},
   commons-codec/commons-codec #:mvn{:version "1.10"},
