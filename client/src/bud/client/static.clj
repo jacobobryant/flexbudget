@@ -1,6 +1,6 @@
 (ns bud.client.static
-  (:require [jobryant.hiccup.core :as hiccup]
-            [jobryant.re-com.core :as rc]
+  (:require [jobryant.views.hiccup :as hiccup]
+            [jobryant.views.re-com :as rc]
             [jobryant.util :as u]
             [bud.client.color :as color]
             [bud.client.shared :refer [navbar]]

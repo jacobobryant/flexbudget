@@ -9,12 +9,8 @@
                        org.clojure/tools.namespace {:mvn/version "0.2.11"}}}}
  :deps
  {shared {:local/root "../shared"}
+  jobryant/trident {:local/root "../../jobryant/target/trident"}
 
-  jobryant/datomic-cloud {:local/root "../../jobryant/datomic-cloud"} ;:mvn/version "1.0-SNAPSHOT"}
-  jobryant/util {:local/root "../../jobryant/util"} ; :mvn/version "1.1-SNAPSHOT"}
-  jobryant/firebase {:mvn/version "1.0-SNAPSHOT"}
-  jobryant/ion {:local/root "../../jobryant/ion"}
-  jobryant/trident {:local/root "../../jobryant/trident"}
   mount {:mvn/version "0.1.15"}
   com.datomic/ion {:mvn/version "0.9.28"}
   org.clojure/data.json {:mvn/version "0.2.6"}
