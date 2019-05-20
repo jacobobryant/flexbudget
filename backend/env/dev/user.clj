@@ -7,6 +7,8 @@
             [jobryant.util :as u]
             [bud.backend.core :as core]
             [immutant.web :as imm]
+            [taoensso.encore :as enc]
+            [jobryant.trident :as trident]
             [datomic.ion.cast :refer [initialize-redirect]]))
 
 (comment
@@ -28,13 +30,11 @@
 
 )
 
-(initialize-redirect :stdout)
-
 (st/instrument)
 
 (defn start-immutant []
   (imm/run
-    core/handler*
+    trident/handler*
     {:port 8080}))
 
 (defstate server :start (start-immutant)

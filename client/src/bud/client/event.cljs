@@ -51,6 +51,7 @@
   (transact! [[:db/retractEntity id]]))
 
 (defn save! [ent]
+  (u/pprint ent)
   (transact! [(->> ent
                    (remove (comp map? second))
                    (into {}))]))

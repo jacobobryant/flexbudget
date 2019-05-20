@@ -44,7 +44,7 @@
       [:tr (rc/for [td r] [:td cell-style td])])]])
 
 (defn parse-currency [s]
-  (int (* (js/parseFloat s) 100)))
+  (.round js/Math (* (js/parseFloat s) 100)))
 
 (defn amount-input
   ([ent k]
