@@ -12,3 +12,5 @@ Copyright &copy; 2019 [Jacob O'Bryant].
 
 [Trident]: https://github.com/jacobobryant/trident
 [this article]: https://jacobobryant.com/post/2019/ion/
+[EPL v2.0]: https:/github.com/jobryant/trident/blob/master/LICENSE
+[Jacob O'Bryant]: https://jacobobryant.com
