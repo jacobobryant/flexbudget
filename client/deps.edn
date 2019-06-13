@@ -2,11 +2,11 @@
  :aliases
  {:dev {:extra-paths ["env/dev"]
         :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
-                     trident/repl {:mvn/version "0.1.6"}
+                     trident/repl {:mvn/version "0.1.7"}
                      nrepl {:mvn/version "0.6.0"}}}}
  :deps
  {shared {:local/root "../shared"}
-  trident/frontend {:mvn/version "0.1.6"}
+  trident/frontend {:mvn/version "0.1.7"}
 
   org.clojure/clojure {:mvn/version "1.9.0"}
   orchestra {:mvn/version "2019.02.06-1"}

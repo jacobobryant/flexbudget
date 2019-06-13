@@ -1,0 +1,6 @@
+#!/bin/bash
+if ! (git status | grep -q "nothing to commit"); then
+  echo Must deploy with a clean commit.
+fi
+uname=$(git rev-parse HEAD)
+GRENCH_PORT=7888 grench main trident.cli.util/-main "$PWD" trident.ion-dev.deploy/-main --uname $uname
