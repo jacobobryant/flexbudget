@@ -1,1 +1,1 @@
-{eid jobryant.util/parse-int}
+{trident/eid trident.util/parse-int}

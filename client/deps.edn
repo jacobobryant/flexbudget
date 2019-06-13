@@ -2,15 +2,14 @@
  :aliases
  {:dev {:extra-paths ["env/dev"]
         :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
-                     org.clojure/tools.namespace {:mvn/version "0.2.11"}
+                     trident/repl {:mvn/version "0.1.6"}
                      nrepl {:mvn/version "0.6.0"}}}}
  :deps
  {shared {:local/root "../shared"}
-  jobryant/trident-front {:local/root "../../jobryant/target/trident-front"}
+  trident/frontend {:mvn/version "0.1.6"}
 
   org.clojure/clojure {:mvn/version "1.9.0"}
   orchestra {:mvn/version "2019.02.06-1"}
   me.raynes/fs {:mvn/version "1.4.6"}
   reagent {:mvn/version "0.8.1"}
-  com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
-  cljs-http {:mvn/version "0.1.46"}}}
+  com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}}}

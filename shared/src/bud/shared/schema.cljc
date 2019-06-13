@@ -1,6 +1,6 @@
 (ns bud.shared.schema
   (:require [clojure.spec.alpha :as s]
-            [jobryant.util :as u]))
+            [trident.util.datomic :as ud]))
 
 (def schema
   {:user/uid [:db.type/string :db.unique/identity]
@@ -24,12 +24,9 @@
    :goal/date [:db.type/instant]
    :goal/allowance [:db.type/long]})
 
-(def datomic-schema (u/datomic-schema schema))
-(def ds-schema (u/datascript-schema schema))
-
-(s/def ::goal (u/ent-spec [:auth/owner :goal/allowance :goal/date :misc/amount]))
-(s/def ::delta (u/ent-spec [:auth/owner :delta/frequency :misc/amount :misc/description]
+(s/def ::goal (ud/ent-keys [:auth/owner :goal/allowance :goal/date :misc/amount]))
+(s/def ::delta (ud/ent-keys [:auth/owner :delta/frequency :misc/amount :misc/description]
                             [:delta/basis :misc/order]))
-(s/def :entry/asset (u/ent-spec [:misc/amount :misc/description] [:misc/order]))
-(s/def ::entry.draft (u/ent-spec [:auth/owner :entry/draft] [:entry/asset]))
-(s/def ::entry (u/ent-spec [:auth/owner :entry/date] [:entry/asset]))
+(s/def :entry/asset (ud/ent-keys [:misc/amount :misc/description] [:misc/order]))
+(s/def ::entry.draft (ud/ent-keys [:auth/owner :entry/draft] [:entry/asset]))
+(s/def ::entry (ud/ent-keys [:auth/owner :entry/date] [:entry/asset]))

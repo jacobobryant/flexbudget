@@ -1,10 +1,12 @@
 (ns user
-  (:require [jobryant.util :as u]
-            [bud.backend.core :as core]
-            [jobryant.trident-dev :refer [go reset]]))
+  (:require [trident.repl :as repl]
+            [trident.util]
+            [mount.core :as mount]))
 
-(comment
-  ; for un-botching the repl
-  (require '[clojure.tools.namespace.repl :as tn])
-  (tn/refresh)
-)
+(defmacro refresh []
+  `(do
+     (mount/stop)
+     (repl/refresh [:after 'mount.core/start])))
+
+(defn init []
+  (repl/init {:refresh-args [:after 'mount.core/start]}))

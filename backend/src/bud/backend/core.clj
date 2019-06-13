@@ -1,10 +1,11 @@
 (ns bud.backend.core
-  (:require [jobryant.trident :as trident]
+  (:require [trident.web :as web]
+            [trident.util] ; for data_readers
             [bud.backend.authorizers :refer [authorizers]]
             [bud.backend.query :refer [datoms-for]]
             [bud.shared.schema :refer [schema]]))
 
-(trident/init!
+(web/init!
   {:app-name "bud"
    :origins [#"http://dev.notjust.us:8000"
              #"https://notjust.us"

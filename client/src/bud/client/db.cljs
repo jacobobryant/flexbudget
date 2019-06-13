@@ -1,21 +1,21 @@
 (ns bud.client.db
   (:require [reagent.core :as r]
             [reagent.ratom :refer-macros [reaction]]
-            [jobryant.util :as u]
+            [trident.util.datomic :refer [datascript-schema]]
             [clojure.pprint :refer [pprint]]
-            [jobryant.datascript.core :as d]
+            [datascript.core :as d]
+            [trident.datascript :refer-macros [defq]]
             [cljs-time.core :as ctime :refer [before? today in-days]]
             [clojure.string :refer [join]]
             [bud.client.calc :as calc]
-            [bud.shared.schema :refer [schema]])
-  (:require-macros [jobryant.datascript.core :refer [defq]]))
+            [bud.shared.schema :refer [schema]]))
 
 (def user #(.. js/firebase auth -currentUser))
 (def token #(.getIdToken (user)))
 (def uid #(.-uid (user)))
 (def email #(.-email (user)))
 
-(defonce conn (d/create-conn (u/datascript-schema schema)))
+(defonce conn (d/create-conn (datascript-schema schema)))
 (defonce loading? (r/atom true))
 
 (defn sort-amount [ent]

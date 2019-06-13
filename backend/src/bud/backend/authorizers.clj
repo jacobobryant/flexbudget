@@ -1,6 +1,6 @@
 (ns bud.backend.authorizers
   (:require [bud.shared.schema :as schema]
-            [jobryant.util :as u]
+            [trident.util :as u]
             [datomic.client.api :as d]))
 
 (def rules

@@ -1,8 +1,8 @@
 (ns bud.client.views
   (:require [reagent.core :as r]
             [reagent.ratom :refer-macros [reaction]]
-            [jobryant.views.re-com :as rc]
-            [jobryant.util :as u]
+            [trident.views.re-com :as rc]
+            [trident.util :as u]
             [bud.client.color :as color]
             [bud.client.db :as db]
             [bud.client.event :as event]

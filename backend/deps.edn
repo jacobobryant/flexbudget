@@ -4,10 +4,12 @@
  {:dev {:extra-paths ["env/dev"]
         :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
                      com.datomic/ion-dev {:mvn/version "0.9.186"}
-                     jobryant/trident-dev {:local/root "../../jobryant/target/trident-dev"}}}}
+                     trident/web-repl {:mvn/version "0.1.6"}
+                     trident/repl {:mvn/version "0.1.6"}
+                     trident/build {:mvn/version "0.1.6"}}}}
  :deps
  {shared {:local/root "../shared"}
-  jobryant/trident {:local/root "../../jobryant/target/trident"}
+  trident/web {:mvn/version "0.1.6"}
 
   mount {:mvn/version "0.1.15"}
   com.datomic/ion {:mvn/version "0.9.28"}
@@ -29,5 +31,4 @@
   org.clojure/tools.reader #:mvn{:version "1.0.0-beta4"},
   org.slf4j/slf4j-api #:mvn{:version "1.7.14"},
   org.clojure/core.memoize #:mvn{:version "0.5.9"},
-  org.clojure/core.cache #:mvn{:version "0.6.5"}
-  }}
+  org.clojure/core.cache #:mvn{:version "0.6.5"}}}

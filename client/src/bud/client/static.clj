@@ -1,7 +1,6 @@
 (ns bud.client.static
-  (:require [jobryant.views.hiccup :as hiccup]
-            [jobryant.views.re-com :as rc]
-            [jobryant.util :as u]
+  (:require [trident.views.hiccup :as hiccup]
+            [trident.views.backend :as v]
             [bud.client.color :as color]
             [bud.client.shared :refer [navbar]]
             [clojure.string :refer [ends-with?]]
@@ -71,14 +70,14 @@
       firebase ensure-logged-out bootstrap-4 firebase-ui)
     [:body
       (navbar)
-      (rc/gap "30px")
+      (v/gap "30px")
       [:div.container
        [:div.row
         [:div.col-lg-6
-         (rc/p "FlexBudget is a simple tool that gives you a
+         (v/p "FlexBudget is a simple tool that gives you a
                high-level understanding of your spending habits
                without forcing you to fill out a detailed budget.")
-         (rc/p
+         (v/p
            "See the video for a short demonstration.")
          [:div#firebaseui-auth-container]]
         [:div.col-lg-6

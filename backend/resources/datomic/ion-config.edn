@@ -1,4 +1,4 @@
-{:allow [jobryant.datomic-cloud.txauth/authorize
+{:allow [trident.datomic-cloud.txauth/authorize
          bud.backend.core/handler]
  :lambdas {:init
            {:fn bud.backend.core/handler

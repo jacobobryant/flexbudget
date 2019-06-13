@@ -1,7 +1,5 @@
 (ns bud.backend.query
-  (:require [datomic.client.api :as d]
-            [jobryant.util :as u]
-            [bud.shared.schema :refer [ds-schema]]))
+  (:require [datomic.client.api :as d]))
 
 (defn datoms-for [db uid]
   (let [user-eid (:db/id (d/pull db [:db/id] [:user/uid uid]))]
@@ -15,5 +13,4 @@
                     [?e ?a ?v]
                     [?a :db/ident ?attr]]
                   db user-eid))
-        [user-eid :user/uid uid])
-      (u/stringify-eids ds-schema))))
+        [user-eid :user/uid uid]))))

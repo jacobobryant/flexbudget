@@ -1,4 +1,5 @@
-^{:open-url "http://dev.notjust.us:8000/app/"}
+^{:open-url "http://dev.notjust.us:8000/app/"
+  :watch-dirs ["src" "../../trident/src"]}
 {:main bud.client.core
  :output-to "target/dev/cljs/main.js"
  :output-dir "target/dev/cljs/"
