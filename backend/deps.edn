@@ -3,24 +3,14 @@
  :aliases
  {:dev {:extra-paths ["env/dev"]
         :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
-                     trident/ion-dev {:mvn/version "0.1.7"}
-                     trident/web-repl {:mvn/version "0.1.7"}
-                     trident/repl {:mvn/version "0.1.7"}}}}
+                     trident/ion-dev  {:mvn/version "0.1.10"}
+                     trident/repl {:mvn/version "0.1.10"}}}}
  :trident/ion {:exclude [com.cognitect/s3-creds]}
  :deps
- {shared {:local/root "../shared"}
-  trident/web {:mvn/version "0.1.7"}
-
-  mount {:mvn/version "0.1.15"}
-  com.datomic/ion {:mvn/version "0.9.28"}
-  org.clojure/data.json {:mvn/version "0.2.6"}
+ {mount {:mvn/version "0.1.15"}
   org.clojure/clojure {:mvn/version "1.9.0"}
-  orchestra {:mvn/version "2019.02.06-1"}
-  compojure {:mvn/version "1.6.1"}
-  ring/ring-defaults {:mvn/version "0.3.2"}
-  ring-cors {:mvn/version "0.1.13"}
-  ring-middleware-format {:mvn/version "0.7.4"}
-  com.taoensso/timbre {:mvn/version "4.10.0"}
+  shared {:local/root "../shared"}
+  trident/web {:mvn/version "0.1.10"}
 
   ; ion dependency conflicts
   com.cognitect/transit-java #:mvn{:version "0.8.311"},
