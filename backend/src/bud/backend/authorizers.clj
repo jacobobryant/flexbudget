@@ -9,41 +9,34 @@
      [?user :user/uid ?uid]]
     [(owns? [?uid ?asset])
      [?entry :entry/asset ?asset]
-     (owns? ?uid ?entry)]])
+     (owns? ?uid ?entry)]
+    [(only-one? [?e ?a ?uid])
+     (owns? ?uid ?e)
+     [?e ?a]
+     (not-join [?e ?uid]
+       (owns? ?uid ?other)
+       [?e ?a]
+       [(not= ?e ?other)])]])
 
 (defn owns? [{:keys [db-before db-after before after uid eid]}]
-  (u/for-every? [[ent db] (map vector [before after] [db-before db-after])
+  (u/for-every? [[ent db] [[before db-before] [after db-after]]
                  :when (some? ent)]
     (not-empty
       (d/q '[:find ?uid :in $ % ?uid ?e :where
              (owns? ?uid ?e)]
            db rules uid eid))))
 
+(defn only-one? [attr {:keys [after db-after uid]}]
+  (not-empty
+    (d/q '[:find ?e :in $ % ?e ?a ?uid :where
+           (only-one? ?e ?a ?uid)]
+         db-after (:db/id after) attr uid)))
+
 (def authorizers
-  {[nil ::schema/entry.draft]
-   (fn [{:keys [after db-after uid]}]
-     (not-empty
-       (d/q '[:find ?e :in $ ?e ?user :where
-              [?e :auth/owner ?user]
-              [?e :entry/draft true]
-              (not-join [?user ?e]
-                [?other :auth/owner ?user]
-                [?other :entry/draft true]
-                [(not= ?e ?other)])]
-            db-after (:db/id after) [:user/uid uid])))
+  {[nil ::schema/entry.draft] (partial only-one? :entry/draft)
    [::schema/entry.draft ::schema/entry.draft] owns?
 
-   [nil ::schema/goal]
-   (fn [{:keys [after db-after uid]}]
-     (not-empty
-       (d/q '[:find ?e :in $ ?e ?user :where
-              [?e :auth/owner ?user]
-              [?e :goal/allowance]
-              (not-join [?user ?e]
-                [?other :auth/owner ?user]
-                [?other :goal/allowance]
-                [(not= ?e ?other)])]
-            db-after (:db/id after) [:user/uid uid])))
+   [nil ::schema/goal] (partial only-one? :goal/allowance)
    [::schema/goal ::schema/goal] owns?
 
    [nil :entry/asset] owns?
