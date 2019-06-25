@@ -1,23 +1,21 @@
 {:paths ["src" "resources"]
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
  :aliases
- {:dev {:extra-paths ["env/dev"]
-        :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
-                     trident/ion-dev  {:mvn/version "0.1.10"}
-                     trident/repl {:mvn/version "0.1.10"}}}}
+ {:dev {:extra-paths ["dev"]
+        :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.78"}
+                     trident/ion-dev  {:mvn/version "0.1.11"}
+                     trident/repl {:mvn/version "0.1.11"}}}}
  :trident/ion {:exclude [com.cognitect/s3-creds]}
  :deps
  {mount {:mvn/version "0.1.15"}
-  org.clojure/clojure {:mvn/version "1.9.0"}
+  org.clojure/clojure {:mvn/version "1.10.0"}
   shared {:local/root "../shared"}
-  trident/web {:mvn/version "0.1.10"}
+  trident/web {:mvn/version "0.1.11"}
 
   ; ion dependency conflicts
   com.cognitect/transit-java #:mvn{:version "0.8.311"},
   commons-codec/commons-codec #:mvn{:version "1.10"},
-  com.datomic/client-api #:mvn{:version "0.8.12"},
   org.clojure/tools.analyzer.jvm #:mvn{:version "0.7.0"},
-  com.fasterxml.jackson.core/jackson-core #:mvn{:version "2.9.5"},
   com.google.guava/guava #:mvn{:version "18.0"},
   org.msgpack/msgpack #:mvn{:version "0.6.10"},
   com.cognitect/transit-clj #:mvn{:version "0.8.285"},
@@ -25,6 +23,6 @@
   org.slf4j/slf4j-api #:mvn{:version "1.7.14"},
   org.clojure/core.memoize #:mvn{:version "0.5.9"},
   org.clojure/core.cache #:mvn{:version "0.6.5"},
-  com.amazonaws/aws-java-sdk-kms #:mvn{:version "1.11.349"},
+  com.amazonaws/aws-java-sdk-kms #:mvn{:version "1.11.479"},
   org.clojure/core.async #:mvn{:version "0.3.442"},
-  com.amazonaws/aws-java-sdk-s3 #:mvn{:version "1.11.349"}}}
+  com.amazonaws/aws-java-sdk-s3 #:mvn{:version "1.11.479"}}}
