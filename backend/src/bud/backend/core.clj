@@ -1,6 +1,7 @@
 (ns bud.backend.core
   (:require [trident.web :as web]
             [trident.util :as u] ; also needed for data_readers
+            [trident.ring :as tring]
             [bud.backend.authorizers :refer [authorizers]]
             [bud.backend.query :refer [datoms-for]]
             [bud.shared.schema :refer [schema]]
@@ -21,6 +22,8 @@
               :schema schema}
              (u/read-config "config.edn"))))
 
-(def handler (apigw/ionize (fn [& args]
-                             (mount/start)
-                             (apply handler* args))))
+(def handler (apigw/ionize
+               (tring/wrap-catchall
+                 #(do
+                    (mount/start)
+                    (handler* %)))))
