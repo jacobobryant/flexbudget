@@ -16,6 +16,7 @@
      (go (<! (request* (merge {:method method
                                :url (str c/backend-host url)
                                :with-credentials? false
+                               :headers {"Accept" "application/edn"}
                                :oauth-token (u/js<! (db/token))}
                               payload)))))
     ([method url] (request method url {}))))
