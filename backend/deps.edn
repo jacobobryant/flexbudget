@@ -1,14 +1,5 @@
 {:paths ["src" "resources"]
- :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
- :aliases
- {:dev {:extra-paths ["dev"]
-        :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.78"}
-                     trident/ion-dev {:mvn/version "0.1.15"}
-                     trident/repl {:mvn/version "0.1.15"}}}}
- :trident/ion {:exclude [com.cognitect/s3-creds]}
  :deps
- {;shared {:local/root "../shared"}
-
-  mount {:mvn/version "0.1.15"}
+ {mount {:mvn/version "0.1.15"}
   org.clojure/clojure {:mvn/version "1.10.0"}
-  trident/web {:mvn/version "0.1.15"}}}
+  trident/web {:mvn/version "0.1.18"}}}

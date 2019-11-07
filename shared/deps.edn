@@ -1,4 +1,4 @@
 {:paths ["src"]
  :deps
- {trident/util {:mvn/version "0.1.15"}
+ {trident/util {:mvn/version "0.1.18"}
   org.clojure/clojure {:mvn/version "1.10.0"}}}
