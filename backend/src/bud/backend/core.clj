@@ -4,6 +4,7 @@
             [trident.ring :as tring]
             [bud.backend.authorizers :refer [authorizers]]
             [bud.backend.query :refer [datoms-for]]
+            [datomic.ion.cast :as cast]
             [bud.shared.schema :refer [schema]]
             [datomic.ion.lambda.api-gateway :as apigw]
             [mount.core :as mount]))
@@ -20,10 +21,12 @@
               :authorizers `authorizers
               :datoms-for datoms-for
               :schema schema}
-             (u/read-config "config.edn"))))
+             (u/read-config "bud-config.edn"))))
 
 (def handler (apigw/ionize
                (tring/wrap-catchall
                  #(do
+                    (cast/event {:msg "flexbudget starting mount"})
                     (mount/start)
+                    (cast/event {:msg "flexbudget started mount"})
                     (handler* %)))))
