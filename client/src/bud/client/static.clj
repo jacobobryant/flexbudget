@@ -67,7 +67,7 @@
   (html
     (head
       [:title "FlexBudget"]
-      firebase ensure-logged-out bootstrap-4 firebase-ui)
+      #_firebase #_ensure-logged-out bootstrap-4 firebase-ui)
     [:body
       (navbar)
       (v/gap "30px")
@@ -80,11 +80,11 @@
          (v/p
            "See the video for a short demonstration.")
 
-         #_(v/p [:strong "Notice: "]
-              "As of September 2019, FlexBudget is no longer operating. I was running it on the same system "
-              "used for " [:a {:href "https://lagukan.com"} "my startup"] ", but there weren't enough "
-              "resources to keep serving both applications. If you'd like to use FlexBudget, "
-              [:a {:href "mailto:foo@jacobobryant.com"} "let me know"] ".")
+         (v/p [:strong "Notice: "]
+              "FlexBudget is currently not working due to " [:a {:href "https://forum.datomic.com/t/d-with-not-working-inside-tx-fn/1243"} "some"]
+              " "
+              [:a {:href "https://forum.datomic.com/t/using-d-with-db-in-a-query-fails-on-cloud/1227"} "bugs"]
+              " in Datomic. Hang tight.")
 
          [:div#firebaseui-auth-container]]
         [:div.col-lg-6

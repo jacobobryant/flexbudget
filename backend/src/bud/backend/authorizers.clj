@@ -30,7 +30,7 @@
   (not-empty
     (d/q '[:find ?e :in $ % ?e ?a ?uid :where
            (only-one? ?e ?a ?uid)]
-         db-after (:db/id after) attr uid)))
+         db-after rules (:db/id after) attr uid)))
 
 (def authorizers
   {[nil ::schema/entry.draft] (partial only-one? :entry/draft)
