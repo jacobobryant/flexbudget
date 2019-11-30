@@ -2,4 +2,4 @@
  :deps
  {mount {:mvn/version "0.1.15"}
   org.clojure/clojure {:mvn/version "1.10.0"}
-  trident/web {:mvn/version "0.1.20"}}}
+  trident/web {:mvn/version "0.1.21-SNAPSHOT"}}}
